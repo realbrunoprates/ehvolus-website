@@ -1928,6 +1928,33 @@ html.has-js .how[data-animated] .how-step:not(.is-lit) p {
   background: var(--color-gold-light);
 }
 
+@media (max-width: 1023px) {
+  .markets-figure {
+    height: auto;
+    aspect-ratio: 16 / 10;
+  }
+}
+
+@media (max-width: 760px) {
+  .markets-figure {
+    aspect-ratio: 3 / 2;
+  }
+
+  .markets-img {
+    height: 114%;
+    margin-top: -7%;
+  }
+
+  .markets-figure figcaption {
+    font-size: 17px;
+    bottom: 18px;
+  }
+
+  .markets-figure figcaption::before {
+    margin-bottom: 12px;
+  }
+}
+
 .market-list {
   margin-top: clamp(48px, 6vw, 80px);
   border-bottom: 1px solid var(--border-on-dark);
@@ -2137,6 +2164,12 @@ html.has-js .how[data-animated] .how-step:not(.is-lit) p {
   height: 100%;
   object-fit: cover;
   object-position: center 35%;
+}
+
+@media (max-width: 760px) {
+  .closing-media img {
+    object-position: 63% 40%;
+  }
 }
 
 .closing-scrim {
@@ -2983,34 +3016,57 @@ html.contact-open {
   }
 }
 
-@media (max-width: 760px) {
+/* celular e tablet em pé: foto inteira no topo (proporção original 3:2), texto embaixo */
+@media (max-width: 1023px) {
   .journey {
     position: relative;
     top: auto;
     height: auto;
-    margin-bottom: 20px;
+    margin-bottom: clamp(20px, 4vw, 32px);
   }
 
   .journey-card {
-    min-height: 82svh;
+    height: auto;
     display: flex;
-    align-items: flex-end;
+    flex-direction: column;
+    background:
+      radial-gradient(80% 60% at 0% 100%, rgba(38, 34, 71, 0.6) 0%, transparent 70%),
+      var(--color-navy-800);
   }
 
-  .journey-shade {
-    background: linear-gradient(0deg, rgba(8, 10, 19, 0.95) 0%, rgba(8, 10, 19, 0.7) 45%, rgba(8, 10, 19, 0.15) 80%);
+  .journey-bg {
+    position: relative;
+    inset: auto;
+    z-index: 0;
+    height: auto;
+    aspect-ratio: 3 / 2;
+  }
+
+  .journey-shade,
+  .journey-dim {
+    display: none;
+  }
+
+  .journey-cap {
+    top: 14px;
+    left: 14px;
+    right: auto;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: rgba(8, 10, 19, 0.55);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
   }
 
   .journey-body {
     position: relative;
     left: auto;
     bottom: auto;
-    padding: 28px 24px;
+    max-width: none;
+    padding: clamp(24px, 4vw, 40px);
   }
 
-  .journey-cap {
-    top: 20px;
-    right: auto;
-    left: 24px;
+  .journey-title {
+    font-size: clamp(26px, 4.6vw, 40px);
   }
 }

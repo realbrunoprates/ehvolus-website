@@ -782,7 +782,7 @@
     /* três caminhos: o painel de trás recua e escurece quando o próximo desliza por cima */
     var journeyCards = toArray(document.querySelectorAll('[data-journey-card]'));
     if (journeyCards.length > 1) {
-      gsap.matchMedia().add('(min-width: 761px)', function () {
+      gsap.matchMedia().add('(min-width: 1024px)', function () {
         journeyCards.forEach(function (card, i) {
           var next = journeyCards[i + 1];
           if (!next) return;
