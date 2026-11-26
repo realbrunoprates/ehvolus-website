@@ -292,22 +292,23 @@
       portalRun = null;
     };
 
-    /* o triângulo desliza só o necessário para o círculo ativo ficar fora da película */
-    var pan = function (key) {
+    /* com um lado aberto, o triângulo vai inteiro para a metade esquerda (sem sobreposição) */
+    var pan = function (open) {
       if (!visual) return;
-      if (!key || !panel) {
+      if (!open || !panel) {
         visual.style.setProperty('--pan', '0px');
+        visual.style.setProperty('--tri-scale', '1');
         return;
       }
-      var node = nodeFor(key);
+      var grid = visual.offsetParent;
+      var gutter = grid ? parseFloat(window.getComputedStyle(grid).paddingLeft) || 0 : 0;
       var width = visual.offsetWidth;
-      var restLeft = visual.offsetLeft - width / 2;
-      var tx = parseFloat(node.style.getPropertyValue('--tx')) / 100;
-      var size = parseFloat(node.style.getPropertyValue('--size')) / 100;
-      var nodeRight = restLeft + tx * width + size * width * 0.62;
-      var dx = Math.min(0, panel.offsetLeft - 28 - nodeRight);
-      dx = Math.max(dx, -restLeft + 8);
+      var restCenter = visual.offsetLeft;
+      var available = panel.offsetLeft - gutter - 56;
+      var scale = Math.min(1, available / width);
+      var dx = gutter + available / 2 - restCenter;
       visual.style.setProperty('--pan', Math.round(dx) + 'px');
+      visual.style.setProperty('--tri-scale', scale.toFixed(3));
     };
 
     var pulse = function (key) {
@@ -378,7 +379,7 @@
       if (barEl) barEl.style.transform = 'scaleX(' + (Math.max(0, index + 1) / keys.length) + ')';
 
       if (storyState.pinned) {
-        pan(key);
+        pan(!!key);
         pulse(key);
         if (motionOk) transitionCard(index);
         else showInstant(index);
@@ -450,7 +451,7 @@
           anticipatePin: 1,
           invalidateOnRefresh: true,
           onRefresh: function () {
-            if (stage > 0) pan(keys[stage - 1]);
+            pan(stage > 0);
           },
           onUpdate: function (self) {
             var p = self.progress;
@@ -467,7 +468,10 @@
           storyState.pinned = false;
           storyState.trigger = null;
           if (outer) outer.style.strokeDashoffset = '';
-          if (visual) visual.style.removeProperty('--pan');
+          if (visual) {
+            visual.style.removeProperty('--pan');
+            visual.style.removeProperty('--tri-scale');
+          }
           showInstant(-1);
           stage = -1;
           setStage(0);
