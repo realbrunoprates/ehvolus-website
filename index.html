@@ -192,22 +192,22 @@
                 </circle>
               </svg>
 
-              <button type="button" class="tri-node tri-node--hub" data-tri-node="ehvolus" aria-label="EHVOLUS: coordenação do fluxo" style="--tx:50%;--ty:59%;--size:24%;">
+              <button type="button" class="tri-node tri-node--hub" data-tri-node="ehvolus" aria-haspopup="dialog" aria-controls="triDetail" aria-label="EHVOLUS: coordenação do fluxo" style="--tx:50%;--ty:59%;--size:24%;">
                 <span class="tri-node-ring" aria-hidden="true"></span>
                 <span class="tri-node-body">
                   <img class="tri-hub-mark" src="assets/brand/wordmark-fe-cropped.svg" width="1584" height="128" alt="">
                   <small>Coordenação do fluxo</small>
                 </span>
               </button>
-              <button type="button" class="tri-node" data-tri-node="empresa" aria-label="Empresa: demanda e gestão" style="--tx:50%;--ty:16.5%;--size:20%;">
+              <button type="button" class="tri-node" data-tri-node="empresa" aria-haspopup="dialog" aria-controls="triDetail" aria-label="Empresa: demanda e gestão" style="--tx:50%;--ty:16.5%;--size:20%;">
                 <span class="tri-node-ring" aria-hidden="true"></span>
                 <span class="tri-node-body"><strong>Empresa</strong><small>Demanda e gestão</small></span>
               </button>
-              <button type="button" class="tri-node" data-tri-node="profissional" aria-label="Profissional: execução e experiência" style="--tx:18.3%;--ty:82.1%;--size:20%;">
+              <button type="button" class="tri-node" data-tri-node="profissional" aria-haspopup="dialog" aria-controls="triDetail" aria-label="Profissional: execução e experiência" style="--tx:18.3%;--ty:82.1%;--size:20%;">
                 <span class="tri-node-ring" aria-hidden="true"></span>
                 <span class="tri-node-body"><strong>Profissional</strong><small>Execução e experiência</small></span>
               </button>
-              <button type="button" class="tri-node" data-tri-node="cliente" aria-label="Cliente: necessidade e avaliação" style="--tx:81.6%;--ty:82.1%;--size:20%;">
+              <button type="button" class="tri-node" data-tri-node="cliente" aria-haspopup="dialog" aria-controls="triDetail" aria-label="Cliente: necessidade e avaliação" style="--tx:81.6%;--ty:82.1%;--size:20%;">
                 <span class="tri-node-ring" aria-hidden="true"></span>
                 <span class="tri-node-body"><strong>Cliente</strong><small>Necessidade e avaliação</small></span>
               </button>
@@ -229,6 +229,9 @@
               <li>Conecta demanda, execução e acompanhamento em tempo real.</li>
               <li>Torna o progresso do serviço visível para todos os lados.</li>
             </ul>
+            <div class="step-actions">
+              <button type="button" class="link-detail" data-detail-open="ehvolus" aria-haspopup="dialog" aria-controls="triDetail"><span class="link-detail-ring" aria-hidden="true"></span>Entenda o papel da EHVOLUS</button>
+            </div>
           </article>
 
           <article class="step-card" id="empresas" data-step="empresa" aria-labelledby="empresas-heading">
@@ -240,7 +243,10 @@
               <span class="step-index">01 · Empresa</span>
               <h3 class="step-title" id="empresas-heading">Mais capacidade de execução. Mais visibilidade sobre o campo.</h3>
               <p class="step-copy">Encontre profissionais adequados à demanda, organize o fluxo de trabalho em um só lugar e acompanhe a execução do início ao fim, sem depender de contato informal.</p>
-              <a class="link-arrow" href="https://app.ehvolus.com.br/onboarding" target="_blank" rel="noopener">Quero levar demandas à EHVOLUS<span aria-hidden="true"></span></a>
+              <div class="step-actions">
+                <a class="link-arrow" href="https://app.ehvolus.com.br/onboarding" target="_blank" rel="noopener">Quero levar demandas à EHVOLUS<span aria-hidden="true"></span></a>
+                <button type="button" class="link-detail" data-detail-open="empresa" aria-haspopup="dialog" aria-controls="triDetail"><span class="link-detail-ring" aria-hidden="true"></span>Entenda este lado</button>
+              </div>
             </div>
           </article>
 
@@ -253,7 +259,10 @@
               <span class="step-index">02 · Profissional</span>
               <h3 class="step-title" id="profissionais-heading">Seu trabalho encontra novas oportunidades. Sua experiência constrói valor.</h3>
               <p class="step-copy">Acesse demandas compatíveis com o que você faz, desenvolva reputação ao longo do tempo e trabalhe com a autonomia e a estrutura que faltavam.</p>
-              <a class="link-arrow" href="https://app.ehvolus.com.br/onboarding" target="_blank" rel="noopener">Quero prestar serviços<span aria-hidden="true"></span></a>
+              <div class="step-actions">
+                <a class="link-arrow" href="https://app.ehvolus.com.br/onboarding" target="_blank" rel="noopener">Quero prestar serviços<span aria-hidden="true"></span></a>
+                <button type="button" class="link-detail" data-detail-open="profissional" aria-haspopup="dialog" aria-controls="triDetail"><span class="link-detail-ring" aria-hidden="true"></span>Entenda este lado</button>
+              </div>
             </div>
           </article>
 
@@ -266,9 +275,26 @@
               <span class="step-index">03 · Cliente</span>
               <h3 class="step-title" id="clientes-heading">Da necessidade ao serviço resolvido, sem ficar no escuro.</h3>
               <p class="step-copy">Encontre a solução adequada para a sua necessidade e acompanhe quem atende, quando atende e como a execução avança até o fim.</p>
-              <a class="link-arrow" href="https://app.ehvolus.com.br/onboarding" target="_blank" rel="noopener">Preciso de um serviço<span aria-hidden="true"></span></a>
+              <div class="step-actions">
+                <a class="link-arrow" href="https://app.ehvolus.com.br/onboarding" target="_blank" rel="noopener">Preciso de um serviço<span aria-hidden="true"></span></a>
+                <button type="button" class="link-detail" data-detail-open="cliente" aria-haspopup="dialog" aria-controls="triDetail"><span class="link-detail-ring" aria-hidden="true"></span>Entenda este lado</button>
+              </div>
             </div>
           </article>
+
+          <div class="tri-detail" id="triDetail" role="dialog" aria-modal="true" aria-labelledby="triDetailTitle" hidden data-tri-detail>
+            <div class="td-grabber" aria-hidden="true"><span></span></div>
+            <div class="td-inner" data-td-inner>
+              <div class="td-head">
+                <div>
+                  <p class="td-tag" data-td-tag></p>
+                  <h3 class="td-title" id="triDetailTitle" tabindex="-1" data-td-title></h3>
+                </div>
+                <button type="button" class="td-close" data-td-close>Fechar</button>
+              </div>
+              <div class="td-body" data-td-body></div>
+            </div>
+          </div>
         </div>
 
       </div>
