@@ -720,26 +720,6 @@ button {
   overflow: visible;
 }
 
-.globe-arc {
-  fill: none;
-  stroke: none;
-}
-
-.globe-trail {
-  fill: none;
-  stroke: #F0CF9F;
-  stroke-width: 2.2;
-  stroke-linecap: round;
-  stroke-dasharray: 14 120;
-  stroke-dashoffset: 14;
-  opacity: 0;
-}
-
-.globe-pulse {
-  fill: #FFE9C2;
-  opacity: 0;
-}
-
 .globe-city {
   fill: url(#globeHalo);
   opacity: 0.3;
@@ -767,11 +747,6 @@ button {
   50% { opacity: 0.95; transform: scale(1.2); }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .globe-pulses {
-    display: none;
-  }
-}
 
 .hero-scrim {
   position: absolute;

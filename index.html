@@ -26,7 +26,7 @@
 <link rel="preload" href="assets/world-ft.webp" as="image" fetchpriority="high">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="assets/site.css?v=2.6">
+<link rel="stylesheet" href="assets/site.css?v=2.7">
 </head>
 <body>
 
@@ -82,10 +82,6 @@
             <img class="hero-globe" src="assets/world-ft.webp" width="1280" height="854" alt="" fetchpriority="high">
             <svg class="globe-net" viewBox="0 0 1280 854" preserveAspectRatio="none" focusable="false" data-globe-net>
               <defs>
-                <filter id="globeGlow" x="-400%" y="-400%" width="900%" height="900%">
-                  <feGaussianBlur stdDeviation="3.2" result="b"></feGaussianBlur>
-                  <feMerge><feMergeNode in="b"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge>
-                </filter>
                 <radialGradient id="globeHalo">
                   <stop offset="0" stop-color="#E4ECFF" stop-opacity="0.95"></stop>
                   <stop offset="0.25" stop-color="#9DB6FF" stop-opacity="0.45"></stop>
@@ -109,80 +105,6 @@
             <circle class="globe-city" cx="438" cy="755" r="9" style="--d:-0.79s;--t:4.3s"></circle>
             <circle class="globe-city" cx="258" cy="684" r="9" style="--d:-1.62s;--t:5.0s"></circle>
             <circle class="globe-city" cx="1118" cy="577" r="9" style="--d:-2.45s;--t:5.7s"></circle>
-              </g>
-              <g class="globe-pulses">
-            <path id="globeArc0" class="globe-arc" d="M490 505 Q352 548 258 684"></path>
-            <path class="globe-trail" d="M490 505 Q352 548 258 684" pathLength="100">
-              <animate attributeName="stroke-dashoffset" values="14;-100;-100" keyTimes="0;0.62;1" dur="6.8s" begin="0s" repeatCount="indefinite"></animate>
-              <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.08;0.52;0.62;1" dur="6.8s" begin="0s" repeatCount="indefinite"></animate>
-            </path>
-            <circle class="globe-pulse" r="3.6" filter="url(#globeGlow)">
-              <animateMotion dur="6.8s" begin="0s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.62;1" calcMode="linear"><mpath href="#globeArc0"></mpath></animateMotion>
-              <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.06;0.55;0.62;1" dur="6.8s" begin="0s" repeatCount="indefinite"></animate>
-            </circle>
-            <path id="globeArc1" class="globe-arc" d="M672 425 Q742 398 812 443"></path>
-            <path class="globe-trail" d="M672 425 Q742 398 812 443" pathLength="100">
-              <animate attributeName="stroke-dashoffset" values="14;-100;-100" keyTimes="0;0.62;1" dur="5.6s" begin="1.3s" repeatCount="indefinite"></animate>
-              <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.08;0.52;0.62;1" dur="5.6s" begin="1.3s" repeatCount="indefinite"></animate>
-            </path>
-            <circle class="globe-pulse" r="3.6" filter="url(#globeGlow)">
-              <animateMotion dur="5.6s" begin="1.3s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.62;1" calcMode="linear"><mpath href="#globeArc1"></mpath></animateMotion>
-              <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.06;0.55;0.62;1" dur="5.6s" begin="1.3s" repeatCount="indefinite"></animate>
-            </circle>
-            <path id="globeArc2" class="globe-arc" d="M920 395 Q1012 372 1105 423"></path>
-            <path class="globe-trail" d="M920 395 Q1012 372 1105 423" pathLength="100">
-              <animate attributeName="stroke-dashoffset" values="14;-100;-100" keyTimes="0;0.62;1" dur="6.2s" begin="2.6s" repeatCount="indefinite"></animate>
-              <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.08;0.52;0.62;1" dur="6.2s" begin="2.6s" repeatCount="indefinite"></animate>
-            </path>
-            <circle class="globe-pulse" r="3.6" filter="url(#globeGlow)">
-              <animateMotion dur="6.2s" begin="2.6s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.62;1" calcMode="linear"><mpath href="#globeArc2"></mpath></animateMotion>
-              <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.06;0.55;0.62;1" dur="6.2s" begin="2.6s" repeatCount="indefinite"></animate>
-            </circle>
-            <path id="globeArc3" class="globe-arc" d="M742 505 Q950 438 1135 545"></path>
-            <path class="globe-trail" d="M742 505 Q950 438 1135 545" pathLength="100">
-              <animate attributeName="stroke-dashoffset" values="14;-100;-100" keyTimes="0;0.62;1" dur="7.4s" begin="0.7s" repeatCount="indefinite"></animate>
-              <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.08;0.52;0.62;1" dur="7.4s" begin="0.7s" repeatCount="indefinite"></animate>
-            </path>
-            <circle class="globe-pulse" r="3.6" filter="url(#globeGlow)">
-              <animateMotion dur="7.4s" begin="0.7s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.62;1" calcMode="linear"><mpath href="#globeArc3"></mpath></animateMotion>
-              <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.06;0.55;0.62;1" dur="7.4s" begin="0.7s" repeatCount="indefinite"></animate>
-            </circle>
-            <path id="globeArc4" class="globe-arc" d="M490 505 Q575 430 672 425"></path>
-            <path class="globe-trail" d="M490 505 Q575 430 672 425" pathLength="100">
-              <animate attributeName="stroke-dashoffset" values="14;-100;-100" keyTimes="0;0.62;1" dur="6.0s" begin="3.4s" repeatCount="indefinite"></animate>
-              <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.08;0.52;0.62;1" dur="6.0s" begin="3.4s" repeatCount="indefinite"></animate>
-            </path>
-            <circle class="globe-pulse" r="3.6" filter="url(#globeGlow)">
-              <animateMotion dur="6.0s" begin="3.4s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.62;1" calcMode="linear"><mpath href="#globeArc4"></mpath></animateMotion>
-              <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.06;0.55;0.62;1" dur="6.0s" begin="3.4s" repeatCount="indefinite"></animate>
-            </circle>
-            <path id="globeArc5" class="globe-arc" d="M1105 423 Q1172 438 1212 512"></path>
-            <path class="globe-trail" d="M1105 423 Q1172 438 1212 512" pathLength="100">
-              <animate attributeName="stroke-dashoffset" values="14;-100;-100" keyTimes="0;0.62;1" dur="5.8s" begin="4.6s" repeatCount="indefinite"></animate>
-              <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.08;0.52;0.62;1" dur="5.8s" begin="4.6s" repeatCount="indefinite"></animate>
-            </path>
-            <circle class="globe-pulse" r="3.6" filter="url(#globeGlow)">
-              <animateMotion dur="5.8s" begin="4.6s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.62;1" calcMode="linear"><mpath href="#globeArc5"></mpath></animateMotion>
-              <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.06;0.55;0.62;1" dur="5.8s" begin="4.6s" repeatCount="indefinite"></animate>
-            </circle>
-            <path id="globeArc6" class="globe-arc" d="M490 505 Q512 640 438 755"></path>
-            <path class="globe-trail" d="M490 505 Q512 640 438 755" pathLength="100">
-              <animate attributeName="stroke-dashoffset" values="14;-100;-100" keyTimes="0;0.62;1" dur="7.0s" begin="2.0s" repeatCount="indefinite"></animate>
-              <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.08;0.52;0.62;1" dur="7.0s" begin="2.0s" repeatCount="indefinite"></animate>
-            </path>
-            <circle class="globe-pulse" r="3.6" filter="url(#globeGlow)">
-              <animateMotion dur="7.0s" begin="2.0s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.62;1" calcMode="linear"><mpath href="#globeArc6"></mpath></animateMotion>
-              <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.06;0.55;0.62;1" dur="7.0s" begin="2.0s" repeatCount="indefinite"></animate>
-            </circle>
-            <path id="globeArc7" class="globe-arc" d="M812 443 Q912 410 1015 452"></path>
-            <path class="globe-trail" d="M812 443 Q912 410 1015 452" pathLength="100">
-              <animate attributeName="stroke-dashoffset" values="14;-100;-100" keyTimes="0;0.62;1" dur="6.4s" begin="5.2s" repeatCount="indefinite"></animate>
-              <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.08;0.52;0.62;1" dur="6.4s" begin="5.2s" repeatCount="indefinite"></animate>
-            </path>
-            <circle class="globe-pulse" r="3.6" filter="url(#globeGlow)">
-              <animateMotion dur="6.4s" begin="5.2s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.62;1" calcMode="linear"><mpath href="#globeArc7"></mpath></animateMotion>
-              <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.06;0.55;0.62;1" dur="6.4s" begin="5.2s" repeatCount="indefinite"></animate>
-            </circle>
               </g>
             </svg>
           </div>
@@ -783,7 +705,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" integrity="sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" integrity="sha384-Z3REaz79l2IaAZqJsSABtTbhjgOUYyV3p90XNnAPCSHg3EMTz1fouunq9WZRtj3d" crossorigin="anonymous"></script>
-<script src="assets/site.js?v=2.6"></script>
-<script src="assets/contact.js?v=2.6"></script>
+<script src="assets/site.js?v=2.7"></script>
+<script src="assets/contact.js?v=2.7"></script>
 </body>
 </html>
