@@ -163,31 +163,172 @@
   });
 
   /* ==========================================================================
-     O FLUXO: triângulo + passos
+     O FLUXO: cada lado se abre a partir do seu círculo
+     No desktop, a rolagem acende um lado por vez: a câmera acompanha o nó,
+     o novo card nasce dele em um portal circular e cada dificuldade é
+     varrida por uma linha dourada que revela como a EHVOLUS conecta.
+     No celular, cada card se abre a partir do próprio marcador ao chegar na tela.
      ========================================================================== */
   var story = document.querySelector('[data-story]');
   var storyState = { pinned: false, index: -1, trigger: null, keys: [] };
 
+  var EASE_PORTAL = 'cubic-bezier(0.77, 0, 0.175, 1)';
+  var EASE_EXPO = 'cubic-bezier(0.16, 1, 0.3, 1)';
+  var EASE_OUT = 'cubic-bezier(0.23, 1, 0.32, 1)';
+
+  /* coreografia de um card: cabeçalho, depois antes → depois, linha a linha */
+  function playCard(card, base) {
+    var list = [];
+    var keep = function (animation) { list.push(animation); return animation; };
+    var rise = [{ opacity: 0, transform: 'translateY(14px)' }, { opacity: 1, transform: 'none' }];
+    card.classList.remove('is-prep');
+
+    toArray(card.querySelectorAll('.fc-tag, .fc-title, .fc-hub-title')).forEach(function (el, i) {
+      keep(el.animate(rise, { duration: 750, delay: base + i * 70, easing: EASE_EXPO, fill: 'both' }));
+    });
+    toArray(card.querySelectorAll('.fc-cols, .fc-col-label')).forEach(function (el, i) {
+      keep(el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 500, delay: base + 180 + i * 80, easing: 'ease', fill: 'both' }));
+    });
+
+    toArray(card.querySelectorAll('.fc-pair')).forEach(function (row, i) {
+      var before = row.querySelector('.fc-before');
+      var after = row.querySelector('.fc-after');
+      var arrow = row.querySelector('.fc-arrow');
+      var scan = row.querySelector('.fc-scan');
+      var rowWidth = row.offsetWidth;
+      var scanWidth = scan.offsetWidth;
+      var travel = rowWidth + scanWidth;
+      var duration = 950;
+      var start = base + 440 + i * 120;
+      var at = function (x) { return start + duration * Math.max(0, Math.min(1, x / travel)); };
+
+      keep(before.animate(rise, { duration: 650, delay: base + 220 + i * 70, easing: EASE_OUT, fill: 'both' }));
+      keep(before.animate([{ color: '#10132A' }, { color: '#4A4E68' }],
+        { duration: 420, delay: at(before.offsetLeft + before.offsetWidth * 0.5), easing: 'ease', fill: 'both' }));
+      keep(scan.animate([
+        { transform: 'translateX(' + (-scanWidth) + 'px)', opacity: 0 },
+        { opacity: 1, offset: 0.08 },
+        { opacity: 1, offset: 0.88 },
+        { transform: 'translateX(' + rowWidth + 'px)', opacity: 0 }
+      ], { duration: duration, delay: start, easing: 'linear', fill: 'both' }));
+      keep(arrow.animate([{ opacity: 0, transform: 'translateX(-6px)' }, { opacity: 1, transform: 'none' }],
+        { duration: 400, delay: at(arrow.offsetLeft), easing: EASE_OUT, fill: 'both' }));
+      var revealStart = at(after.offsetLeft + scanWidth * 0.2);
+      var revealEnd = at(after.offsetLeft + after.offsetWidth + scanWidth * 0.2);
+      keep(after.animate([{ clipPath: 'inset(-10% 100% -10% 0)' }, { clipPath: 'inset(-10% 0% -10% 0)' }],
+        { duration: Math.max(200, revealEnd - revealStart), delay: revealStart, easing: 'linear', fill: 'both' }));
+    });
+
+    toArray(card.querySelectorAll('.fc-list--before li')).forEach(function (li, i) {
+      keep(li.animate(rise, { duration: 650, delay: base + 260 + i * 80, easing: EASE_OUT, fill: 'both' }));
+    });
+    toArray(card.querySelectorAll('.fc-list--after li')).forEach(function (li, i) {
+      keep(li.animate([{ clipPath: 'inset(-10% 100% -10% 0)', opacity: 0.4 }, { clipPath: 'inset(-10% 0% -10% 0)', opacity: 1 }],
+        { duration: 750, delay: base + 560 + i * 150, easing: EASE_PORTAL, fill: 'both' }));
+    });
+    return list;
+  }
+
+  /* portal: um círculo do tamanho do nó, no lugar do nó, que cresce até cobrir o card */
+  function portalGeometry(card, origin, startRadius) {
+    var o = origin.getBoundingClientRect();
+    var c = card.getBoundingClientRect();
+    var cx = o.left + o.width / 2 - c.left;
+    var cy = o.top + o.height / 2 - c.top;
+    var far = Math.max(
+      Math.hypot(cx, cy), Math.hypot(c.width - cx, cy),
+      Math.hypot(cx, c.height - cy), Math.hypot(c.width - cx, c.height - cy)
+    );
+    var at = ' at ' + cx.toFixed(1) + 'px ' + cy.toFixed(1) + 'px)';
+    var r0 = startRadius != null ? startRadius : o.width / 2;
+    return { from: 'circle(' + r0.toFixed(1) + 'px' + at, to: 'circle(' + Math.ceil(far + 2) + 'px' + at };
+  }
+
   if (story) {
-    var steps = toArray(story.querySelectorAll('[data-step]'));
-    var keys = steps.map(function (step) { return step.getAttribute('data-step'); });
+    var cards = toArray(story.querySelectorAll('[data-step]'));
+    var keys = cards.map(function (card) { return card.getAttribute('data-step'); });
     var nodes = toArray(story.querySelectorAll('[data-tri-node]'));
     var edges = toArray(story.querySelectorAll('[data-tri-edge]'));
     var labels = toArray(story.querySelectorAll('[data-tri-label]'));
     var outer = story.querySelector('[data-tri-outer]');
     var countEl = story.querySelector('[data-story-count]');
     var barEl = story.querySelector('[data-story-bar]');
+    var panel = story.querySelector('[data-flow-panel]');
+    var triWrap = story.querySelector('[data-tri]');
     var names = { ehvolus: 'EHVOLUS', empresa: 'Empresa', profissional: 'Profissional', cliente: 'Cliente' };
     storyState.keys = keys;
+
+    var shown = 0;
+    var portalRun = null;
+    var cardAnims = [];
+    var stackObserver = null;
+
+    var nodeFor = function (key) {
+      return nodes.filter(function (node) { return node.getAttribute('data-tri-node') === key; })[0];
+    };
+
+    var cancelCardAnims = function () {
+      cardAnims.forEach(function (animation) { animation.cancel(); });
+      cardAnims = [];
+    };
+
+    var trackCamera = function (key) {
+      if (!triWrap) return;
+      var node = nodeFor(key);
+      if (key === 'ehvolus' || !node) {
+        triWrap.classList.remove('is-tracking');
+      } else {
+        triWrap.style.setProperty('--fx', node.style.getPropertyValue('--tx'));
+        triWrap.style.setProperty('--fy', node.style.getPropertyValue('--ty'));
+        triWrap.classList.add('is-tracking');
+      }
+      if (node && motionOk) {
+        node.classList.remove('is-pulse');
+        void node.offsetWidth;
+        node.classList.add('is-pulse');
+      }
+    };
+
+    var showInstant = function (index) {
+      cards.forEach(function (card, i) {
+        card.classList.toggle('is-shown', i === index);
+        card.classList.remove('is-entering', 'is-prep');
+        card.style.clipPath = '';
+      });
+      shown = index;
+    };
+
+    /* modo fixo: o novo card se abre por cima do anterior a partir do nó */
+    var revealPinned = function (index) {
+      if (portalRun) {
+        portalRun.animation.cancel();
+        showInstant(portalRun.index);
+        portalRun = null;
+      }
+      if (index === shown) return;
+      cancelCardAnims();
+      var card = cards[index];
+      var node = nodeFor(keys[index]);
+      card.classList.add('is-entering');
+      var geo = portalGeometry(card, node);
+      var animation = card.animate([{ clipPath: geo.from }, { clipPath: geo.to }],
+        { duration: 1000, easing: EASE_PORTAL, fill: 'both' });
+      portalRun = { animation: animation, index: index };
+      cardAnims = playCard(card, 380);
+      animation.onfinish = function () {
+        if (!portalRun || portalRun.animation !== animation) return;
+        animation.cancel();
+        showInstant(index);
+        portalRun = null;
+      };
+    };
 
     var setStep = function (index) {
       if (index === storyState.index) return;
       storyState.index = index;
       var key = keys[index];
 
-      steps.forEach(function (step, i) {
-        step.classList.toggle('is-active', i === index);
-      });
+      cards.forEach(function (card, i) { card.classList.toggle('is-active', i === index); });
       nodes.forEach(function (node) {
         node.classList.toggle('is-active', node.getAttribute('data-tri-node') === key);
       });
@@ -199,457 +340,131 @@
       });
       if (countEl) countEl.textContent = names[key] || '';
       if (barEl) barEl.style.transform = 'scaleX(' + ((index + 1) / keys.length) + ')';
+
+      if (storyState.pinned) {
+        trackCamera(key);
+        if (motionOk) revealPinned(index);
+        else showInstant(index);
+      }
     };
 
     storyState.positionFor = function (index) {
       var st = storyState.trigger;
-      return st.start + ((index + 0.35) / keys.length) * (st.end - st.start);
+      return st.start + ((index + 0.4) / keys.length) * (st.end - st.start);
+    };
+
+    /* celular, tablet ou sem GSAP: cada card se abre a partir do próprio marcador */
+    var setupStacked = function () {
+      if (!motionOk || !('IntersectionObserver' in window)) return;
+      cards.forEach(function (card) {
+        card.classList.add('is-prep');
+        var badge = card.querySelector('.fc-node');
+        if (badge) card.style.clipPath = portalGeometry(card, badge, 5).from;
+      });
+      stackObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          var card = entry.target;
+          stackObserver.unobserve(card);
+          var badge = card.querySelector('.fc-node');
+          if (badge) {
+            var geo = portalGeometry(card, badge, 5);
+            var animation = card.animate([{ clipPath: geo.from }, { clipPath: geo.to }],
+              { duration: 1100, easing: EASE_PORTAL, fill: 'both' });
+            animation.onfinish = function () { animation.cancel(); card.style.clipPath = ''; };
+          }
+          card.style.clipPath = '';
+          playCard(card, 300);
+        });
+      }, { threshold: 0, rootMargin: '0px 0px -30% 0px' }); /* o card recortado só expõe o marcador; dispara quando ele passa de 70% da tela */
+      cards.forEach(function (card) { stackObserver.observe(card); });
+    };
+
+    var teardownStacked = function () {
+      if (stackObserver) stackObserver.disconnect();
+      stackObserver = null;
+      cards.forEach(function (card) {
+        card.classList.remove('is-prep');
+        card.style.clipPath = '';
+      });
     };
 
     setStep(0);
 
-    /* ======================================================================
-       O CÍRCULO SE ABRE
-       Clique num círculo: a câmera se aproxima dele, um portal circular
-       nasce do próprio nó e vira o painel, e cada dificuldade é varrida
-       por uma linha dourada que revela como a EHVOLUS conecta.
-       ====================================================================== */
-    var DETAILS = {
-      empresa: {
-        tag: 'Empresa',
-        title: 'Demanda e gestão',
-        pairs: [
-          ['Depende de contatos avulsos para montar cada operação.', 'Encontra profissionais adequados à demanda em um só lugar.'],
-          ['Cada nova demanda começa do zero, sem histórico reaproveitável.', 'Organiza o fluxo de trabalho sem depender de planilha paralela.'],
-          ['Falta visibilidade sobre o andamento do que já está em execução.', 'Acompanha a execução do início ao fim em tempo real.']
-        ]
-      },
-      profissional: {
-        tag: 'Profissional',
-        title: 'Execução e experiência',
-        pairs: [
-          ['Cada trabalho novo começa sem levar o histórico anterior.', 'Constrói reputação que acompanha sua trajetória ao longo do tempo.'],
-          ['Oportunidades chegam de forma informal e irregular.', 'Acessa demandas compatíveis com sua especialidade.'],
-          ['Falta uma estrutura que sustente a autonomia no dia a dia.', 'Ganha autonomia apoiada por uma estrutura consistente.']
-        ]
-      },
-      cliente: {
-        tag: 'Cliente',
-        title: 'Necessidade e avaliação',
-        pairs: [
-          ['Não sabe ao certo quem vai atender a própria necessidade.', 'Encontra a solução adequada para a necessidade apresentada.'],
-          ['Fica sem visibilidade entre o pedido e a execução.', 'Acompanha quem atende, quando atende e como o serviço avança.'],
-          ['Depende de indicação informal para confiar no serviço.', 'Avalia a execução até a conclusão do serviço.']
-        ]
-      },
-      ehvolus: {
-        tag: 'EHVOLUS',
-        title: 'Coordenação do fluxo',
-        before: [
-          'Os três lados trabalhavam isolados, cada um com sua própria rotina.',
-          'A comunicação entre demanda, execução e acompanhamento se perdia no caminho.'
-        ],
-        after: [
-          'Reúne empresa, profissional e cliente no mesmo fluxo.',
-          'Conecta demanda, execução e acompanhamento em tempo real.',
-          'Torna o progresso do serviço visível para todos os lados.'
-        ]
-      }
-    };
-
-    var LABEL_BEFORE = 'A dificuldade';
-    var LABEL_AFTER = 'Como a EHVOLUS conecta';
-    var EASE_PORTAL = 'cubic-bezier(0.77, 0, 0.175, 1)';
-    var EASE_EXPO = 'cubic-bezier(0.16, 1, 0.3, 1)';
-    var EASE_OUT = 'cubic-bezier(0.23, 1, 0.32, 1)';
-
-    var detail = story.querySelector('[data-tri-detail]');
-    var detailInner = story.querySelector('[data-td-inner]');
-    var detailTag = story.querySelector('[data-td-tag]');
-    var detailTitle = story.querySelector('[data-td-title]');
-    var detailBody = story.querySelector('[data-td-body]');
-    var triWrap = story.querySelector('[data-tri]');
-    var stepsWrap = story.querySelector('.story-steps');
-    var detailState = { open: false, key: null, trigger: null, anims: [], closing: null, timer: null };
-
-    var nodeFor = function (key) {
-      return nodes.filter(function (node) { return node.getAttribute('data-tri-node') === key; })[0];
-    };
-
-    var trackAnim = function (animation) {
-      detailState.anims.push(animation);
-      return animation;
-    };
-
-    var cancelAnims = function () {
-      detailState.anims.forEach(function (animation) { animation.cancel(); });
-      detailState.anims = [];
-    };
-
-    var renderDetail = function (key) {
-      var data = DETAILS[key];
-      detailTag.textContent = data.tag;
-      detailTitle.textContent = data.title;
-      var html = '';
-      if (data.pairs) {
-        html += '<div class="td-cols" aria-hidden="true"><span>' + LABEL_BEFORE + '</span><span></span><span>' + LABEL_AFTER + '</span></div>';
-        html += '<ol class="td-pairs">';
-        data.pairs.forEach(function (pair) {
-          html += '<li class="td-pair">' +
-            '<span class="td-scan" aria-hidden="true"></span>' +
-            '<p class="td-before"><span class="td-label">' + LABEL_BEFORE + '</span>' + pair[0] + '</p>' +
-            '<span class="td-arrow" aria-hidden="true"></span>' +
-            '<p class="td-after"><span class="td-label td-label--gold">' + LABEL_AFTER + '</span>' + pair[1] + '</p>' +
-            '</li>';
-        });
-        html += '</ol>';
-      } else {
-        html += '<div class="td-split">' +
-          '<div><p class="td-col-label">' + LABEL_BEFORE + '</p><ul class="td-list td-list--before">' +
-          data.before.map(function (item) { return '<li>' + item + '</li>'; }).join('') + '</ul></div>' +
-          '<div><p class="td-col-label td-col-label--gold">' + LABEL_AFTER + '</p><ul class="td-list td-list--after">' +
-          data.after.map(function (item) { return '<li>' + item + '</li>'; }).join('') + '</ul></div>' +
-          '</div>';
-      }
-      detailBody.innerHTML = html;
-    };
-
-    /* coreografia do conteúdo: cabeçalho, depois antes → depois, linha a linha */
-    var choreograph = function (base) {
-      var rise = [{ opacity: 0, transform: 'translateY(14px)' }, { opacity: 1, transform: 'none' }];
-      toArray(detail.querySelectorAll('.td-tag, .td-title, .td-close')).forEach(function (el, i) {
-        trackAnim(el.animate(rise, { duration: 700, delay: Math.max(0, base - 220) + i * 60, easing: EASE_EXPO, fill: 'both' }));
-      });
-      toArray(detail.querySelectorAll('.td-cols, .td-col-label')).forEach(function (el, i) {
-        trackAnim(el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 500, delay: base - 60 + i * 80, easing: 'ease', fill: 'both' }));
-      });
-
-      toArray(detail.querySelectorAll('.td-pair')).forEach(function (row, i) {
-        var before = row.querySelector('.td-before');
-        var after = row.querySelector('.td-after');
-        var arrow = row.querySelector('.td-arrow');
-        var scan = row.querySelector('.td-scan');
-        var rowWidth = row.offsetWidth;
-        var scanWidth = scan.offsetWidth;
-        var travel = rowWidth + scanWidth;
-        var duration = 950;
-        var start = base + 240 + i * 120;
-        var at = function (x) { return start + duration * Math.max(0, Math.min(1, x / travel)); };
-
-        trackAnim(before.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }],
-          { duration: 600, delay: base + i * 70, easing: EASE_OUT, fill: 'both' }));
-        trackAnim(before.animate([{ color: '#F6F7F8' }, { color: '#A8ACC4' }],
-          { duration: 420, delay: at(before.offsetLeft + before.offsetWidth * 0.5), easing: 'ease', fill: 'both' }));
-        trackAnim(scan.animate([
-          { transform: 'translateX(' + (-scanWidth) + 'px)', opacity: 0 },
-          { opacity: 1, offset: 0.08 },
-          { opacity: 1, offset: 0.88 },
-          { transform: 'translateX(' + rowWidth + 'px)', opacity: 0 }
-        ], { duration: duration, delay: start, easing: 'linear', fill: 'both' }));
-        trackAnim(arrow.animate([{ opacity: 0, transform: 'translateX(-6px)' }, { opacity: 1, transform: 'none' }],
-          { duration: 400, delay: at(arrow.offsetLeft), easing: EASE_OUT, fill: 'both' }));
-        var revealStart = at(after.offsetLeft + scanWidth * 0.2);
-        var revealEnd = at(after.offsetLeft + after.offsetWidth + scanWidth * 0.2);
-        trackAnim(after.animate([{ clipPath: 'inset(-10% 100% -10% 0)' }, { clipPath: 'inset(-10% 0% -10% 0)' }],
-          { duration: Math.max(200, revealEnd - revealStart), delay: revealStart, easing: 'linear', fill: 'both' }));
-      });
-
-      toArray(detail.querySelectorAll('.td-list--before li')).forEach(function (li, i) {
-        trackAnim(li.animate(rise, { duration: 600, delay: base + i * 80, easing: EASE_OUT, fill: 'both' }));
-      });
-      toArray(detail.querySelectorAll('.td-list--after li')).forEach(function (li, i) {
-        trackAnim(li.animate([{ clipPath: 'inset(-10% 100% -10% 0)', opacity: 0.4 }, { clipPath: 'inset(-10% 0% -10% 0)', opacity: 1 }],
-          { duration: 700, delay: base + 320 + i * 140, easing: EASE_PORTAL, fill: 'both' }));
-      });
-    };
-
-    /* geometria do portal: um círculo do tamanho do nó, no lugar do nó */
-    var portalGeometry = function (node) {
-      var n = node.getBoundingClientRect();
-      var p = detail.getBoundingClientRect();
-      var cx = n.left + n.width / 2 - p.left;
-      var cy = n.top + n.height / 2 - p.top;
-      var far = Math.max(
-        Math.hypot(cx, cy), Math.hypot(p.width - cx, cy),
-        Math.hypot(cx, p.height - cy), Math.hypot(p.width - cx, p.height - cy)
-      );
-      var at = ' at ' + cx.toFixed(1) + 'px ' + cy.toFixed(1) + 'px)';
-      return { from: 'circle(' + (n.width / 2).toFixed(1) + 'px' + at, to: 'circle(' + Math.ceil(far + 2) + 'px' + at };
-    };
-
-    var focusCamera = function (key) {
-      var node = nodeFor(key);
-      if (!triWrap || !node) return;
-      triWrap.style.setProperty('--fx', node.style.getPropertyValue('--tx'));
-      triWrap.style.setProperty('--fy', node.style.getPropertyValue('--ty'));
-      triWrap.classList.add('is-focus');
-      nodes.forEach(function (n) { n.classList.toggle('is-focused', n === node); });
-    };
-
-    var releaseCamera = function () {
-      if (!triWrap) return;
-      triWrap.classList.remove('is-focus');
-      nodes.forEach(function (n) { n.classList.remove('is-focused'); });
-    };
-
-    var syncStep = function (key) {
-      if (!(storyState.pinned && storyState.trigger)) return;
-      var index = keys.indexOf(key);
-      if (index > -1 && index !== storyState.index) {
-        window.scrollTo({ top: storyState.positionFor(index), behavior: 'auto' });
-        setStep(index);
-      }
-    };
-
-    var finishClose = function () {
-      cancelAnims();
-      detail.hidden = true;
-      detail.style.clipPath = '';
-      detail.style.transform = '';
-      detail.classList.remove('is-sheet');
-      document.body.classList.remove('detail-open');
-      detailState.closing = null;
-    };
-
-    var openDetail = function (key, trigger) {
-      if (!DETAILS[key] || !detail) return;
-      if (detailState.open) {
-        if (detailState.key === key) return;
-        switchDetail(key, trigger);
-        return;
-      }
-      if (detailState.closing) {
-        detailState.closing.cancel();
-        finishClose();
-      }
-
-      var node = nodeFor(key);
-      var sheet = !storyState.pinned;
-      syncStep(key);
-      detailState.open = true;
-      detailState.key = key;
-      detailState.trigger = trigger || node;
-
-      renderDetail(key);
-      detail.classList.toggle('is-sheet', sheet);
-      document.body.classList.toggle('detail-open', sheet);
-      if (stepsWrap) stepsWrap.classList.add('has-detail');
-
-      if (!motionOk) {
-        detail.hidden = false;
-        trackAnim(detail.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: 'ease' }));
-        detailTitle.focus({ preventScroll: true });
-        return;
-      }
-
-      detail.style.clipPath = 'circle(0px at -9999px -9999px)';
-      detail.hidden = false;
-      var geo = portalGeometry(node);
-      focusCamera(key);
-      trackAnim(detail.animate([{ clipPath: geo.from }, { clipPath: geo.to }],
-        { duration: sheet ? 820 : 950, delay: 140, easing: EASE_PORTAL, fill: 'both' }));
-      choreograph(sheet ? 520 : 600);
-      detailTitle.focus({ preventScroll: true });
-    };
-
-    var switchDetail = function (key, trigger) {
-      detailState.key = key;
-      detailState.trigger = trigger || nodeFor(key);
-      syncStep(key);
-      focusCamera(key);
-      if (!motionOk) {
-        renderDetail(key);
-        detailTitle.focus({ preventScroll: true });
-        return;
-      }
-      window.clearTimeout(detailState.timer);
-      var out = detailInner.animate([{ opacity: 1, filter: 'blur(0px)' }, { opacity: 0, filter: 'blur(6px)' }],
-        { duration: 160, easing: 'ease', fill: 'forwards' });
-      detailState.timer = window.setTimeout(function () {
-        cancelAnims();
-        renderDetail(key);
-        out.cancel();
-        trackAnim(detailInner.animate([{ opacity: 0, filter: 'blur(6px)' }, { opacity: 1, filter: 'blur(0px)' }],
-          { duration: 360, easing: 'ease' }));
-        detail.style.clipPath = '';
-        choreograph(140);
-        detailTitle.focus({ preventScroll: true });
-      }, 160);
-    };
-
-    var closeDetail = function (options) {
-      options = options || {};
-      if (!detailState.open) return;
-      detailState.open = false;
-      window.clearTimeout(detailState.timer);
-      var node = nodeFor(detailState.key);
-      var trigger = detailState.trigger;
-      releaseCamera();
-      if (stepsWrap) stepsWrap.classList.remove('has-detail');
-
-      if (options.instant || !motionOk) {
-        if (!options.instant) {
-          var fade = detail.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 150, easing: 'ease' });
-          detailState.closing = fade;
-          fade.onfinish = finishClose;
-        } else {
-          finishClose();
-        }
-      } else if (options.drag) {
-        var from = detail.style.transform || 'translateY(0px)';
-        cancelAnims();
-        var slide = detail.animate([{ transform: from }, { transform: 'translateY(100%)' }], { duration: 280, easing: EASE_OUT, fill: 'forwards' });
-        detailState.closing = slide;
-        slide.onfinish = finishClose;
-      } else {
-        var geo = portalGeometry(node);
-        cancelAnims();
-        var collapse = detail.animate([{ clipPath: geo.to }, { clipPath: geo.from }],
-          { duration: 420, easing: 'cubic-bezier(0.7, 0, 0.84, 0)', fill: 'forwards' });
-        detailState.closing = collapse;
-        collapse.onfinish = finishClose;
-      }
-
-      if (options.returnFocus && trigger && typeof trigger.focus === 'function') {
-        trigger.focus({ preventScroll: true });
-      }
-    };
-
-    storyState.closeDetail = closeDetail;
-    storyState.detailKey = function () { return detailState.open ? detailState.key : null; };
-
-    nodes.forEach(function (node) {
-      node.addEventListener('click', function () {
-        var key = node.getAttribute('data-tri-node');
-        if (detailState.open && detailState.key === key) closeDetail({ returnFocus: true });
-        else openDetail(key, node);
-      });
-    });
-
-    toArray(story.querySelectorAll('[data-detail-open]')).forEach(function (button) {
-      button.addEventListener('click', function () {
-        openDetail(button.getAttribute('data-detail-open'), button);
-      });
-    });
-
-    if (detail) {
-      detail.querySelector('[data-td-close]').addEventListener('click', function () {
-        closeDetail({ returnFocus: true });
-      });
-
-      document.addEventListener('click', function (event) {
-        if (!detailState.open) return;
-        if (detail.contains(event.target)) return;
-        if (event.target.closest('[data-tri-node], [data-detail-open]')) return;
-        closeDetail();
-      });
-
-      document.addEventListener('keydown', function (event) {
-        if (!detailState.open) return;
-        if (event.key === 'Escape') {
-          closeDetail({ returnFocus: true });
-          return;
-        }
-        if (event.key === 'Tab') {
-          var focusable = toArray(detail.querySelectorAll('button, a[href]'));
-          var first = focusable[0];
-          var last = focusable[focusable.length - 1];
-          if (!detail.contains(document.activeElement)) {
-            event.preventDefault();
-            first.focus();
-          } else if (event.shiftKey && (document.activeElement === first || document.activeElement === detailTitle)) {
-            event.preventDefault();
-            last.focus();
-          } else if (!event.shiftKey && document.activeElement === last) {
-            event.preventDefault();
-            first.focus();
-          }
-        }
-      });
-
-      /* celular: arrastar para baixo fecha; para cima resiste */
-      var drag = null;
-      detail.addEventListener('pointerdown', function (event) {
-        if (!detail.classList.contains('is-sheet') || !detailState.open || drag) return;
-        if (!event.target.closest('.td-grabber, .td-head') || event.target.closest('button')) return;
-        drag = { y: event.clientY, t: performance.now(), dy: 0, id: event.pointerId };
-        detail.setPointerCapture(event.pointerId);
-      });
-      detail.addEventListener('pointermove', function (event) {
-        if (!drag || event.pointerId !== drag.id) return;
-        var dy = event.clientY - drag.y;
-        drag.dy = dy < 0 ? dy * 0.15 : dy;
-        detail.style.transform = 'translateY(' + drag.dy.toFixed(1) + 'px)';
-      });
-      var endDrag = function (event) {
-        if (!drag || event.pointerId !== drag.id) return;
-        var distance = drag.dy;
-        var velocity = Math.abs(distance) / Math.max(1, performance.now() - drag.t);
-        drag = null;
-        if (distance > 120 || (distance > 16 && velocity > 0.11)) {
-          closeDetail({ drag: true, returnFocus: true });
-        } else {
-          detail.animate([{ transform: 'translateY(' + distance + 'px)' }, { transform: 'translateY(0px)' }], { duration: 320, easing: EASE_OUT });
-          detail.style.transform = '';
-        }
-      };
-      detail.addEventListener('pointerup', endDrag);
-      detail.addEventListener('pointercancel', endDrag);
-    }
-
-    /* teclado: ao focar um link de um passo escondido, a história vai até ele */
-    steps.forEach(function (step, index) {
-      step.addEventListener('focusin', function () {
-        if (storyState.pinned && storyState.trigger && storyState.index !== index) {
-          window.scrollTo({ top: storyState.positionFor(index), behavior: 'auto' });
-          setStep(index);
-        }
-      });
-    });
+    var pinQuery = '(min-width: 1024px) and (min-height: 620px) and (prefers-reduced-motion: no-preference)';
+    if (!(hasGsap && window.matchMedia(pinQuery).matches)) setupStacked();
 
     /* modo fixo: só no desktop, com espaço e com movimento */
     if (hasGsap) {
       var mm = gsap.matchMedia();
-      mm.add('(min-width: 1024px) and (min-height: 620px) and (prefers-reduced-motion: no-preference)', function () {
-        storyState.closeDetail({ instant: true });
+      mm.add(pinQuery, function () {
+        teardownStacked();
         story.classList.add('is-pinned');
         storyState.pinned = true;
         storyState.index = -1;
+        showInstant(0);
         setStep(0);
+
+        if (motionOk && panel) {
+          cards[0].classList.add('is-prep');
+          ScrollTrigger.create({
+            trigger: panel,
+            start: 'top 78%',
+            once: true,
+            onEnter: function () {
+              if (storyState.index === 0 && !portalRun) cardAnims = playCard(cards[0], 0);
+              else cards[0].classList.remove('is-prep');
+            }
+          });
+        }
 
         storyState.trigger = ScrollTrigger.create({
           trigger: story,
           pin: story.querySelector('[data-story-pin]'),
           start: 'top top',
-          end: function () { return '+=' + Math.round(window.innerHeight * 2.8); },
+          end: function () { return '+=' + Math.round(window.innerHeight * 3); },
           anticipatePin: 1,
           invalidateOnRefresh: true,
           onUpdate: function (self) {
             var p = self.progress;
             setStep(Math.min(keys.length - 1, Math.floor(p * keys.length)));
-            var openKey = storyState.detailKey();
-            if (openKey && keys[storyState.index] !== openKey) storyState.closeDetail();
             if (outer) outer.style.strokeDashoffset = String(Math.max(0, 1 - p * 1.2));
           }
         });
         if (outer) outer.style.strokeDashoffset = '1';
 
         return function () {
-          storyState.closeDetail({ instant: true });
+          if (portalRun) portalRun.animation.cancel();
+          portalRun = null;
+          cancelCardAnims();
           story.classList.remove('is-pinned');
           storyState.pinned = false;
           storyState.trigger = null;
           if (outer) outer.style.strokeDashoffset = '';
+          if (triWrap) triWrap.classList.remove('is-tracking');
+          showInstant(0);
           storyState.index = -1;
           setStep(0);
         };
       });
     }
 
+    /* clique num círculo leva ao lado correspondente */
+    nodes.forEach(function (node) {
+      node.addEventListener('click', function () {
+        var index = keys.indexOf(node.getAttribute('data-tri-node'));
+        if (index < 0) return;
+        if (storyState.pinned && storyState.trigger) {
+          window.scrollTo({ top: storyState.positionFor(index), behavior: motionOk ? 'smooth' : 'auto' });
+        } else {
+          scrollToElement(cards[index]);
+        }
+      });
+    });
+
     /* leve inclinação 3D que segue o mouse, com inércia */
     var canvas = story.querySelector('[data-tri-canvas]');
-    var stage = story.querySelector('[data-tri]');
-    if (canvas && stage && finePointer.matches && motionOk) {
+    if (canvas && triWrap && finePointer.matches && motionOk) {
       var target = { x: 0, y: 0 };
       var current = { x: 0, y: 0 };
       var raf = null;
@@ -663,14 +478,14 @@
           raf = null;
         }
       };
-      stage.addEventListener('pointermove', function (event) {
+      triWrap.addEventListener('pointermove', function (event) {
         if (event.pointerType !== 'mouse') return;
-        var rect = stage.getBoundingClientRect();
+        var rect = triWrap.getBoundingClientRect();
         target.x = ((event.clientX - rect.left) / rect.width - 0.5) * 8;
         target.y = ((event.clientY - rect.top) / rect.height - 0.5) * -8;
         if (!raf) raf = window.requestAnimationFrame(tick);
       });
-      stage.addEventListener('pointerleave', function () {
+      triWrap.addEventListener('pointerleave', function () {
         target.x = 0;
         target.y = 0;
         if (!raf) raf = window.requestAnimationFrame(tick);

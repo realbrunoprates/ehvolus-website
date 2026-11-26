@@ -26,7 +26,7 @@
 <link rel="preload" href="assets/world-ft.webp" as="image" fetchpriority="high">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="assets/site.css?v=2.1">
+<link rel="stylesheet" href="assets/site.css?v=2.2">
 </head>
 <body>
 
@@ -131,7 +131,7 @@
     </div>
   </section>
 
-  <!-- 03 · O FLUXO (TRIÂNGULO + JORNADAS) -->
+  <!-- 03 · O FLUXO (triângulo: cada lado se abre a partir do seu círculo) -->
   <section class="story" id="trilateral" aria-labelledby="trilateral-heading" data-story>
     <div class="story-pin" data-story-pin>
       <div class="wrap story-grid">
@@ -192,22 +192,22 @@
                 </circle>
               </svg>
 
-              <button type="button" class="tri-node tri-node--hub" data-tri-node="ehvolus" aria-haspopup="dialog" aria-controls="triDetail" aria-label="EHVOLUS: coordenação do fluxo" style="--tx:50%;--ty:59%;--size:24%;">
+              <button type="button" class="tri-node tri-node--hub" data-tri-node="ehvolus" aria-label="EHVOLUS: coordenação do fluxo" style="--tx:50%;--ty:59%;--size:24%;">
                 <span class="tri-node-ring" aria-hidden="true"></span>
                 <span class="tri-node-body">
                   <img class="tri-hub-mark" src="assets/brand/wordmark-fe-cropped.svg" width="1584" height="128" alt="">
                   <small>Coordenação do fluxo</small>
                 </span>
               </button>
-              <button type="button" class="tri-node" data-tri-node="empresa" aria-haspopup="dialog" aria-controls="triDetail" aria-label="Empresa: demanda e gestão" style="--tx:50%;--ty:16.5%;--size:20%;">
+              <button type="button" class="tri-node" data-tri-node="empresa" aria-label="Empresa: demanda e gestão" style="--tx:50%;--ty:16.5%;--size:20%;">
                 <span class="tri-node-ring" aria-hidden="true"></span>
                 <span class="tri-node-body"><strong>Empresa</strong><small>Demanda e gestão</small></span>
               </button>
-              <button type="button" class="tri-node" data-tri-node="profissional" aria-haspopup="dialog" aria-controls="triDetail" aria-label="Profissional: execução e experiência" style="--tx:18.3%;--ty:82.1%;--size:20%;">
+              <button type="button" class="tri-node" data-tri-node="profissional" aria-label="Profissional: execução e experiência" style="--tx:18.3%;--ty:82.1%;--size:20%;">
                 <span class="tri-node-ring" aria-hidden="true"></span>
                 <span class="tri-node-body"><strong>Profissional</strong><small>Execução e experiência</small></span>
               </button>
-              <button type="button" class="tri-node" data-tri-node="cliente" aria-haspopup="dialog" aria-controls="triDetail" aria-label="Cliente: necessidade e avaliação" style="--tx:81.6%;--ty:82.1%;--size:20%;">
+              <button type="button" class="tri-node" data-tri-node="cliente" aria-label="Cliente: necessidade e avaliação" style="--tx:81.6%;--ty:82.1%;--size:20%;">
                 <span class="tri-node-ring" aria-hidden="true"></span>
                 <span class="tri-node-body"><strong>Cliente</strong><small>Necessidade e avaliação</small></span>
               </button>
@@ -220,81 +220,111 @@
           </div>
         </div>
 
-        <div class="story-steps">
-          <article class="step-card step-card--hub is-active" data-step="ehvolus" aria-labelledby="trilateral-heading">
-            <p class="eyebrow">Como o fluxo se conecta</p>
-            <h2 class="step-hub-title" id="trilateral-heading">Quando os três lados se conectam, o serviço flui.</h2>
-            <ul class="step-points">
-              <li>Reúne empresa, profissional e cliente no mesmo fluxo.</li>
-              <li>Conecta demanda, execução e acompanhamento em tempo real.</li>
-              <li>Torna o progresso do serviço visível para todos os lados.</li>
-            </ul>
-            <div class="step-actions">
-              <button type="button" class="link-detail" data-detail-open="ehvolus" aria-haspopup="dialog" aria-controls="triDetail"><span class="link-detail-ring" aria-hidden="true"></span>Entenda o papel da EHVOLUS</button>
+        <div class="flow-panel" data-flow-panel>
+          <article class="flow-card flow-card--hub is-active" data-step="ehvolus" id="lado-ehvolus" aria-labelledby="trilateral-heading">
+            <div class="fc-head">
+              <p class="fc-tag"><span class="fc-node" aria-hidden="true"></span>Como o fluxo se conecta</p>
+              <h2 class="fc-hub-title" id="trilateral-heading">Quando os três lados se conectam, o serviço flui.</h2>
             </div>
-          </article>
-
-          <article class="step-card" id="empresas" data-step="empresa" aria-labelledby="empresas-heading">
-            <figure class="step-figure">
-              <img src="assets/journey-empresa.webp" width="1440" height="960" loading="lazy" alt="Equipe de operações coordenando serviços técnicos em uma central conectada">
-              <figcaption>Operação coordenada</figcaption>
-            </figure>
-            <div class="step-text">
-              <span class="step-index">01 · Empresa</span>
-              <h3 class="step-title" id="empresas-heading">Mais capacidade de execução. Mais visibilidade sobre o campo.</h3>
-              <p class="step-copy">Encontre profissionais adequados à demanda, organize o fluxo de trabalho em um só lugar e acompanhe a execução do início ao fim, sem depender de contato informal.</p>
-              <div class="step-actions">
-                <a class="link-arrow" href="https://app.ehvolus.com.br/onboarding" target="_blank" rel="noopener">Quero levar demandas à EHVOLUS<span aria-hidden="true"></span></a>
-                <button type="button" class="link-detail" data-detail-open="empresa" aria-haspopup="dialog" aria-controls="triDetail"><span class="link-detail-ring" aria-hidden="true"></span>Entenda este lado</button>
+            <div class="fc-split">
+              <div>
+                <p class="fc-col-label">A dificuldade</p>
+                <ul class="fc-list fc-list--before">
+                  <li>Os três lados trabalhavam isolados, cada um com sua própria rotina.</li>
+                  <li>A comunicação entre demanda, execução e acompanhamento se perdia no caminho.</li>
+                </ul>
+              </div>
+              <div>
+                <p class="fc-col-label fc-col-label--gold">Como a EHVOLUS conecta</p>
+                <ul class="fc-list fc-list--after">
+                  <li>Reúne empresa, profissional e cliente no mesmo fluxo.</li>
+                  <li>Conecta demanda, execução e acompanhamento em tempo real.</li>
+                  <li>Torna o progresso do serviço visível para todos os lados.</li>
+                </ul>
               </div>
             </div>
           </article>
-
-          <article class="step-card" id="profissionais" data-step="profissional" aria-labelledby="profissionais-heading">
-            <figure class="step-figure">
-              <img src="assets/journey-profissional-servicos.webp" width="1116" height="960" loading="lazy" alt="Eletricista testa um quadro elétrico com multímetro enquanto outros profissionais cuidam da climatização e da hidráulica de um edifício">
-              <figcaption>Experiência em campo</figcaption>
-            </figure>
-            <div class="step-text">
-              <span class="step-index">02 · Profissional</span>
-              <h3 class="step-title" id="profissionais-heading">Seu trabalho encontra novas oportunidades. Sua experiência constrói valor.</h3>
-              <p class="step-copy">Acesse demandas compatíveis com o que você faz, desenvolva reputação ao longo do tempo e trabalhe com a autonomia e a estrutura que faltavam.</p>
-              <div class="step-actions">
-                <a class="link-arrow" href="https://app.ehvolus.com.br/onboarding" target="_blank" rel="noopener">Quero prestar serviços<span aria-hidden="true"></span></a>
-                <button type="button" class="link-detail" data-detail-open="profissional" aria-haspopup="dialog" aria-controls="triDetail"><span class="link-detail-ring" aria-hidden="true"></span>Entenda este lado</button>
-              </div>
+          <article class="flow-card" data-step="empresa" id="lado-empresa" aria-labelledby="lado-empresa-title">
+            <div class="fc-head">
+              <p class="fc-tag"><span class="fc-node" aria-hidden="true"></span>Empresa</p>
+              <h3 class="fc-title" id="lado-empresa-title">Demanda e gestão</h3>
             </div>
+            <div class="fc-cols" aria-hidden="true"><span>A dificuldade</span><span></span><span>Como a EHVOLUS conecta</span></div>
+            <ol class="fc-pairs">
+              <li class="fc-pair">
+                <span class="fc-scan" aria-hidden="true"></span>
+                <p class="fc-before"><span class="fc-label">A dificuldade</span>Depende de contatos avulsos para montar cada operação.</p>
+                <span class="fc-arrow" aria-hidden="true"></span>
+                <p class="fc-after"><span class="fc-label fc-label--gold">Como a EHVOLUS conecta</span>Encontra profissionais adequados à demanda em um só lugar.</p>
+              </li>
+              <li class="fc-pair">
+                <span class="fc-scan" aria-hidden="true"></span>
+                <p class="fc-before"><span class="fc-label">A dificuldade</span>Cada nova demanda começa do zero, sem histórico reaproveitável.</p>
+                <span class="fc-arrow" aria-hidden="true"></span>
+                <p class="fc-after"><span class="fc-label fc-label--gold">Como a EHVOLUS conecta</span>Organiza o fluxo de trabalho sem depender de planilha paralela.</p>
+              </li>
+              <li class="fc-pair">
+                <span class="fc-scan" aria-hidden="true"></span>
+                <p class="fc-before"><span class="fc-label">A dificuldade</span>Falta visibilidade sobre o andamento do que já está em execução.</p>
+                <span class="fc-arrow" aria-hidden="true"></span>
+                <p class="fc-after"><span class="fc-label fc-label--gold">Como a EHVOLUS conecta</span>Acompanha a execução do início ao fim em tempo real.</p>
+              </li>
+            </ol>
           </article>
-
-          <article class="step-card" id="clientes" data-step="cliente" aria-labelledby="clientes-heading">
-            <figure class="step-figure">
-              <img src="assets/journey-cliente.webp" width="1440" height="960" loading="lazy" alt="Cliente acompanhando em tempo real a conclusão de um serviço técnico em um edifício">
-              <figcaption>Acompanhamento visível</figcaption>
-            </figure>
-            <div class="step-text">
-              <span class="step-index">03 · Cliente</span>
-              <h3 class="step-title" id="clientes-heading">Da necessidade ao serviço resolvido, sem ficar no escuro.</h3>
-              <p class="step-copy">Encontre a solução adequada para a sua necessidade e acompanhe quem atende, quando atende e como a execução avança até o fim.</p>
-              <div class="step-actions">
-                <a class="link-arrow" href="https://app.ehvolus.com.br/onboarding" target="_blank" rel="noopener">Preciso de um serviço<span aria-hidden="true"></span></a>
-                <button type="button" class="link-detail" data-detail-open="cliente" aria-haspopup="dialog" aria-controls="triDetail"><span class="link-detail-ring" aria-hidden="true"></span>Entenda este lado</button>
-              </div>
+          <article class="flow-card" data-step="profissional" id="lado-profissional" aria-labelledby="lado-profissional-title">
+            <div class="fc-head">
+              <p class="fc-tag"><span class="fc-node" aria-hidden="true"></span>Profissional</p>
+              <h3 class="fc-title" id="lado-profissional-title">Execução e experiência</h3>
             </div>
+            <div class="fc-cols" aria-hidden="true"><span>A dificuldade</span><span></span><span>Como a EHVOLUS conecta</span></div>
+            <ol class="fc-pairs">
+              <li class="fc-pair">
+                <span class="fc-scan" aria-hidden="true"></span>
+                <p class="fc-before"><span class="fc-label">A dificuldade</span>Cada trabalho novo começa sem levar o histórico anterior.</p>
+                <span class="fc-arrow" aria-hidden="true"></span>
+                <p class="fc-after"><span class="fc-label fc-label--gold">Como a EHVOLUS conecta</span>Constrói reputação que acompanha sua trajetória ao longo do tempo.</p>
+              </li>
+              <li class="fc-pair">
+                <span class="fc-scan" aria-hidden="true"></span>
+                <p class="fc-before"><span class="fc-label">A dificuldade</span>Oportunidades chegam de forma informal e irregular.</p>
+                <span class="fc-arrow" aria-hidden="true"></span>
+                <p class="fc-after"><span class="fc-label fc-label--gold">Como a EHVOLUS conecta</span>Acessa demandas compatíveis com sua especialidade.</p>
+              </li>
+              <li class="fc-pair">
+                <span class="fc-scan" aria-hidden="true"></span>
+                <p class="fc-before"><span class="fc-label">A dificuldade</span>Falta uma estrutura que sustente a autonomia no dia a dia.</p>
+                <span class="fc-arrow" aria-hidden="true"></span>
+                <p class="fc-after"><span class="fc-label fc-label--gold">Como a EHVOLUS conecta</span>Ganha autonomia apoiada por uma estrutura consistente.</p>
+              </li>
+            </ol>
           </article>
-
-          <div class="tri-detail" id="triDetail" role="dialog" aria-modal="true" aria-labelledby="triDetailTitle" hidden data-tri-detail>
-            <div class="td-grabber" aria-hidden="true"><span></span></div>
-            <div class="td-inner" data-td-inner>
-              <div class="td-head">
-                <div>
-                  <p class="td-tag" data-td-tag></p>
-                  <h3 class="td-title" id="triDetailTitle" tabindex="-1" data-td-title></h3>
-                </div>
-                <button type="button" class="td-close" data-td-close>Fechar</button>
-              </div>
-              <div class="td-body" data-td-body></div>
+          <article class="flow-card" data-step="cliente" id="lado-cliente" aria-labelledby="lado-cliente-title">
+            <div class="fc-head">
+              <p class="fc-tag"><span class="fc-node" aria-hidden="true"></span>Cliente</p>
+              <h3 class="fc-title" id="lado-cliente-title">Necessidade e avaliação</h3>
             </div>
-          </div>
+            <div class="fc-cols" aria-hidden="true"><span>A dificuldade</span><span></span><span>Como a EHVOLUS conecta</span></div>
+            <ol class="fc-pairs">
+              <li class="fc-pair">
+                <span class="fc-scan" aria-hidden="true"></span>
+                <p class="fc-before"><span class="fc-label">A dificuldade</span>Não sabe ao certo quem vai atender a própria necessidade.</p>
+                <span class="fc-arrow" aria-hidden="true"></span>
+                <p class="fc-after"><span class="fc-label fc-label--gold">Como a EHVOLUS conecta</span>Encontra a solução adequada para a necessidade apresentada.</p>
+              </li>
+              <li class="fc-pair">
+                <span class="fc-scan" aria-hidden="true"></span>
+                <p class="fc-before"><span class="fc-label">A dificuldade</span>Fica sem visibilidade entre o pedido e a execução.</p>
+                <span class="fc-arrow" aria-hidden="true"></span>
+                <p class="fc-after"><span class="fc-label fc-label--gold">Como a EHVOLUS conecta</span>Acompanha quem atende, quando atende e como o serviço avança.</p>
+              </li>
+              <li class="fc-pair">
+                <span class="fc-scan" aria-hidden="true"></span>
+                <p class="fc-before"><span class="fc-label">A dificuldade</span>Depende de indicação informal para confiar no serviço.</p>
+                <span class="fc-arrow" aria-hidden="true"></span>
+                <p class="fc-after"><span class="fc-label fc-label--gold">Como a EHVOLUS conecta</span>Avalia a execução até a conclusão do serviço.</p>
+              </li>
+            </ol>
+          </article>
         </div>
 
       </div>
@@ -332,7 +362,49 @@
     </div>
   </section>
 
-  <!-- 05 · MERCADOS -->
+  <!-- 05 · TRÊS CAMINHOS -->
+  <section class="section journeys" id="jornadas" aria-labelledby="jornadas-heading">
+    <div class="wrap">
+      <div class="journeys-head">
+        <p class="eyebrow" data-reveal>Três caminhos, um fluxo</p>
+        <h2 class="display-2" id="jornadas-heading" data-split-reveal>Cada lado entra pela porta que faz sentido para ele.</h2>
+      </div>
+      <div class="journey-grid" data-stagger>
+        <article class="journey" id="empresas" aria-labelledby="empresas-heading" data-reveal>
+          <figure class="journey-figure">
+            <img src="assets/journey-empresa.webp" width="1440" height="960" loading="lazy" alt="Equipe de operações coordenando serviços técnicos em uma central conectada" style="object-position:64% 50%;">
+            <figcaption>Operação coordenada</figcaption>
+          </figure>
+          <span class="journey-index">01 · Empresa</span>
+          <h3 class="journey-title" id="empresas-heading">Mais capacidade de execução. Mais visibilidade sobre o campo.</h3>
+          <p class="journey-copy">Encontre profissionais adequados à demanda, organize o fluxo de trabalho em um só lugar e acompanhe a execução do início ao fim, sem depender de contato informal.</p>
+          <a class="link-arrow link-arrow--light" href="https://app.ehvolus.com.br/onboarding" target="_blank" rel="noopener">Quero levar demandas à EHVOLUS<span aria-hidden="true"></span></a>
+        </article>
+        <article class="journey" id="profissionais" aria-labelledby="profissionais-heading" data-reveal>
+          <figure class="journey-figure">
+            <img src="assets/journey-profissional-servicos.webp" width="1116" height="960" loading="lazy" alt="Eletricista testa um quadro elétrico com multímetro enquanto outros profissionais cuidam da climatização e da hidráulica de um edifício" style="object-position:30% 50%;">
+            <figcaption>Experiência em campo</figcaption>
+          </figure>
+          <span class="journey-index">02 · Profissional</span>
+          <h3 class="journey-title" id="profissionais-heading">Seu trabalho encontra novas oportunidades. Sua experiência constrói valor.</h3>
+          <p class="journey-copy">Acesse demandas compatíveis com o que você faz, desenvolva reputação ao longo do tempo e trabalhe com a autonomia e a estrutura que faltavam.</p>
+          <a class="link-arrow link-arrow--light" href="https://app.ehvolus.com.br/onboarding" target="_blank" rel="noopener">Quero prestar serviços<span aria-hidden="true"></span></a>
+        </article>
+        <article class="journey" id="clientes" aria-labelledby="clientes-heading" data-reveal>
+          <figure class="journey-figure">
+            <img src="assets/journey-cliente.webp" width="1440" height="960" loading="lazy" alt="Cliente acompanhando em tempo real a conclusão de um serviço técnico em um edifício" style="object-position:34% 50%;">
+            <figcaption>Acompanhamento visível</figcaption>
+          </figure>
+          <span class="journey-index">03 · Cliente</span>
+          <h3 class="journey-title" id="clientes-heading">Da necessidade ao serviço resolvido, sem ficar no escuro.</h3>
+          <p class="journey-copy">Encontre a solução adequada para a sua necessidade e acompanhe quem atende, quando atende e como a execução avança até o fim.</p>
+          <a class="link-arrow link-arrow--light" href="https://app.ehvolus.com.br/onboarding" target="_blank" rel="noopener">Preciso de um serviço<span aria-hidden="true"></span></a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 · MERCADOS -->
   <section class="section markets" id="mercados" aria-labelledby="mercados-heading">
     <div class="wrap">
       <div class="markets-head">
@@ -349,64 +421,71 @@
     <div class="wrap">
       <ol class="market-list">
         <li class="market" data-reveal>
-          <span class="market-num">01</span>
-          <h3 class="market-name">Telecom</h3>
+          <div class="market-head">
+            <span class="market-num">01</span>
+            <h3 class="market-name">Telecom</h3>
+          </div>
           <p class="market-copy">Profissionais de instalação, manutenção e operação de serviços para telecomunicações.</p>
         </li>
         <li class="market" data-reveal>
-          <span class="market-num">02</span>
-          <h3 class="market-name">Manutenção predial</h3>
+          <div class="market-head">
+            <span class="market-num">02</span>
+            <h3 class="market-name">Manutenção predial</h3>
+          </div>
           <p class="market-copy">Profissionais para manutenção preventiva e corretiva de sistemas elétricos, hidráulicos, de climatização, de segurança eletrônica e reparos prediais.</p>
         </li>
         <li class="market" data-reveal>
-          <span class="market-num">03</span>
-          <h3 class="market-name">Serviços especializados</h3>
+          <div class="market-head">
+            <span class="market-num">03</span>
+            <h3 class="market-name">Serviços especializados</h3>
+          </div>
           <p class="market-copy">Profissionais para atendimentos sob demanda a ser consultada.</p>
         </li>
       </ol>
     </div>
   </section>
 
-  <!-- 06 · PROPÓSITO -->
+  <!-- 07 · PROPÓSITO -->
   <section class="section purpose" id="proposito" aria-labelledby="proposito-heading">
     <div class="wrap">
-      <p class="eyebrow" data-reveal id="proposito-heading">Propósito</p>
+      <div class="purpose-head">
+        <p class="eyebrow" data-reveal>Propósito</p>
+        <h2 class="display-2" id="proposito-heading" data-split-reveal>Missão, Visão e Valores</h2>
+      </div>
 
       <div class="purpose-row" id="missao">
-        <h2 class="purpose-label" data-reveal>Missão</h2>
-        <p class="purpose-text" data-scrub-words>A EHVOLUS existe para conectar inovação e profissionais, entregando soluções que impulsionam a evolução tecnológica de empresas no mercado de serviços.</p>
+        <h3 class="purpose-label" data-reveal>Missão</h3>
+        <p class="purpose-text" data-reveal>A EHVOLUS existe para conectar inovação e profissionais, entregando soluções que impulsionam a evolução tecnológica de empresas no mercado de serviços.</p>
       </div>
 
       <div class="purpose-row" id="visao">
-        <h2 class="purpose-label" data-reveal>Visão</h2>
-        <p class="purpose-text" data-scrub-words>Liderar a transição para uma nova cultura de serviços profissionais, onde a gestão em tempo real e a flexibilidade estrutural sejam os pilares de empresas conectadas às tendências globais.</p>
+        <h3 class="purpose-label" data-reveal>Visão</h3>
+        <p class="purpose-text" data-reveal>Liderar a transição para uma nova cultura de serviços profissionais, onde a gestão em tempo real e a flexibilidade estrutural sejam os pilares de empresas conectadas às tendências globais.</p>
       </div>
 
-      <div class="purpose-row purpose-row--values">
-        <h2 class="purpose-label" data-reveal>Valores</h2>
-        <div class="values">
-          <div class="values-group" data-reveal>
-            <p class="values-dim">Humano</p>
-            <ol class="values-list">
-              <li><span>01</span>Liberdade</li>
-              <li><span>02</span>Eficiência operacional</li>
-              <li><span>03</span>Preservar o essencial</li>
-            </ol>
-          </div>
-          <div class="values-group" data-reveal>
-            <p class="values-dim">Tecnológico</p>
-            <ol class="values-list" start="4">
-              <li><span>04</span>Tecnologia integrada ao profissional</li>
-              <li><span>05</span>Transparência e dados em tempo real</li>
-              <li><span>06</span>Evolução contínua e agilidade</li>
-            </ol>
-          </div>
+      <div class="purpose-row purpose-row--values" data-stagger>
+        <h3 class="purpose-label" data-reveal>Valores</h3>
+        <div class="values-group" data-reveal>
+          <p class="values-dim">Humano</p>
+          <ol class="values-list">
+            <li><span>01</span>Liberdade</li>
+            <li><span>02</span>Eficiência operacional</li>
+            <li><span>03</span>Preservar o essencial</li>
+          </ol>
+        </div>
+        <div class="values-group" data-reveal>
+          <p class="values-dim">Tecnológico</p>
+          <ol class="values-list" start="4">
+            <li><span>04</span>Tecnologia integrada ao profissional</li>
+            <li><span>05</span>Transparência e dados em tempo real</li>
+            <li><span>06</span>Evolução contínua e agilidade</li>
+          </ol>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 07 · FECHAMENTO -->
+  <!-- 08 · FECHAMENTO -->
   <section class="closing" id="fechamento" aria-labelledby="fechamento-heading">
     <div class="closing-media" aria-hidden="true">
       <img src="assets/mvv/montanhas.webp" width="1672" height="941" loading="lazy" alt="" data-closing-img>
@@ -579,7 +658,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" integrity="sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" integrity="sha384-Z3REaz79l2IaAZqJsSABtTbhjgOUYyV3p90XNnAPCSHg3EMTz1fouunq9WZRtj3d" crossorigin="anonymous"></script>
-<script src="assets/site.js?v=2.1"></script>
-<script src="assets/contact.js?v=2.1"></script>
+<script src="assets/site.js?v=2.2"></script>
+<script src="assets/contact.js?v=2.2"></script>
 </body>
 </html>
