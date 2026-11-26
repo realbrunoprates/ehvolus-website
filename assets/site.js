@@ -356,9 +356,12 @@
       };
     };
 
+    var dismissed = false;
+
     var setStage = function (next) {
       if (next === stage) return;
       stage = next;
+      dismissed = false;
       var index = next - 1;
       var key = index >= 0 ? keys[index] : null;
       story.classList.toggle('is-intro', next === 0);
@@ -384,6 +387,32 @@
         if (motionOk) transitionCard(index);
         else showInstant(index);
       }
+    };
+
+    /* fechar: o card recolhe para o círculo e o triângulo volta ao centro */
+    var closeCard = function () {
+      if (!storyState.pinned || dismissed || stage < 1) return;
+      dismissed = true;
+      story.classList.add('is-intro');
+      pan(false);
+      nodes.forEach(function (node) { node.classList.remove('is-active'); });
+      if (motionOk) transitionCard(-1);
+      else showInstant(-1);
+    };
+
+    var openCurrent = function () {
+      var index = stage - 1;
+      if (!storyState.pinned || index < 0) return;
+      var key = keys[index];
+      dismissed = false;
+      story.classList.remove('is-intro');
+      nodes.forEach(function (node) {
+        node.classList.toggle('is-active', node.getAttribute('data-tri-node') === key);
+      });
+      pan(true);
+      pulse(key);
+      if (motionOk) transitionCard(index);
+      else showInstant(index);
     };
 
     storyState.positionFor = function (index) {
@@ -485,11 +514,37 @@
         var index = keys.indexOf(node.getAttribute('data-tri-node'));
         if (index < 0) return;
         if (storyState.pinned && storyState.trigger) {
+          if (index === stage - 1) {
+            if (dismissed) openCurrent();
+            else closeCard();
+            return;
+          }
           window.scrollTo({ top: storyState.positionFor(index), behavior: motionOk ? 'smooth' : 'auto' });
         } else {
           scrollToElement(cards[index]);
         }
       });
+    });
+
+    /* botão Fechar, clique fora do card e Esc */
+    toArray(story.querySelectorAll('[data-fc-close]')).forEach(function (button) {
+      button.addEventListener('click', function () {
+        var active = nodeFor(keys[stage - 1]);
+        closeCard();
+        if (active) active.focus({ preventScroll: true });
+      });
+    });
+
+    document.addEventListener('click', function (event) {
+      if (!storyState.pinned || dismissed || stage < 1) return;
+      if (event.target.closest('.flow-card, [data-tri-node]')) return;
+      closeCard();
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key !== 'Escape' || !storyState.pinned || dismissed || stage < 1) return;
+      if (document.body.classList.contains('nav-open') || document.documentElement.classList.contains('contact-open')) return;
+      closeCard();
     });
 
     /* leve inclinação 3D que segue o mouse, com inércia */

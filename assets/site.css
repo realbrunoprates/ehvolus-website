@@ -1545,6 +1545,41 @@ html.is-ready .hero .doors[data-intro] { --d: 940ms; }
   }
 }
 
+.fc-close {
+  display: none;
+}
+
+.story.is-pinned .fc-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid var(--border-on-dark);
+  background: rgba(8, 10, 19, 0.35);
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark);
+  transition: border-color 200ms ease, background-color 200ms ease, transform 160ms var(--ease-out);
+}
+
+.story.is-pinned .fc-close:active {
+  transform: scale(0.96);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .story.is-pinned .fc-close:hover {
+    border-color: var(--color-gold-light);
+    background: rgba(194, 161, 124, 0.1);
+  }
+}
+
 /* conteúdo aguardando a abertura (só com JS e movimento permitido) */
 .flow-card.is-prep .fc-tag,
 .flow-card.is-prep .fc-title,
