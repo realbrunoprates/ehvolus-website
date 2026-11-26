@@ -524,6 +524,49 @@
   }
 
   /* ==========================================================================
+     GLOBO VIVO: profundidade com o mouse e pausa fora da tela
+     ========================================================================== */
+  var globeNet = document.querySelector('[data-globe-net]');
+  var globePan = document.querySelector('[data-globe-pan]');
+  var heroSection = document.querySelector('.hero');
+
+  if (globeNet && heroSection && 'IntersectionObserver' in window && typeof globeNet.pauseAnimations === 'function') {
+    new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) globeNet.unpauseAnimations();
+        else globeNet.pauseAnimations();
+      });
+    }).observe(heroSection);
+  }
+
+  if (globePan && heroSection && finePointer.matches && motionOk) {
+    var gTarget = { x: 0, y: 0 };
+    var gCurrent = { x: 0, y: 0 };
+    var gRaf = null;
+    var gTick = function () {
+      gCurrent.x += (gTarget.x - gCurrent.x) * 0.06;
+      gCurrent.y += (gTarget.y - gCurrent.y) * 0.06;
+      globePan.style.transform = 'translate3d(' + gCurrent.x.toFixed(2) + 'px, ' + gCurrent.y.toFixed(2) + 'px, 0)';
+      if (Math.abs(gTarget.x - gCurrent.x) > 0.05 || Math.abs(gTarget.y - gCurrent.y) > 0.05) {
+        gRaf = window.requestAnimationFrame(gTick);
+      } else {
+        gRaf = null;
+      }
+    };
+    heroSection.addEventListener('pointermove', function (event) {
+      if (event.pointerType !== 'mouse') return;
+      gTarget.x = (event.clientX / window.innerWidth - 0.5) * -22;
+      gTarget.y = (event.clientY / window.innerHeight - 0.5) * -14;
+      if (!gRaf) gRaf = window.requestAnimationFrame(gTick);
+    });
+    heroSection.addEventListener('pointerleave', function () {
+      gTarget.x = 0;
+      gTarget.y = 0;
+      if (!gRaf) gRaf = window.requestAnimationFrame(gTick);
+    });
+  }
+
+  /* ==========================================================================
      ÂNCORAS: rolagem suave e ciente da história fixa
      ========================================================================== */
   function headerOffset() {
