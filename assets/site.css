@@ -1274,11 +1274,11 @@ html.is-ready .hero .doors[data-intro] { --d: 940ms; }
 }
 
 .fc-hub-title {
-  max-width: 16ch;
-  margin-top: 18px;
-  font-size: clamp(30px, 3.1vw, 48px);
-  line-height: 1.03;
-  letter-spacing: -0.04em;
+  max-width: 21ch;
+  margin-top: 14px;
+  font-size: clamp(26px, 2.5vw, 38px);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
 }
 
 .fc-cols,
@@ -1397,7 +1397,7 @@ html.is-ready .hero .doors[data-intro] { --d: 940ms; }
 
 .fc-list li {
   position: relative;
-  padding: 14px 0 14px 24px;
+  padding: 13px 0 13px 22px;
   border-top: 1px solid var(--border-on-dark);
   font-size: 16px;
   line-height: 1.5;
@@ -1536,10 +1536,11 @@ html.is-ready .hero .doors[data-intro] { --d: 940ms; }
 
 .story.is-pinned .flow-card {
   position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  top: 50%;
+  left: 0;
+  right: 0;
+  max-height: 100%;
+  translate: 0 -50%;
   visibility: hidden;
   pointer-events: auto;
 }

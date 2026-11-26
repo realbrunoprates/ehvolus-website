@@ -184,10 +184,10 @@
     card.classList.remove('is-prep');
 
     toArray(card.querySelectorAll('.fc-tag, .fc-title, .fc-hub-title')).forEach(function (el, i) {
-      keep(el.animate(rise, { duration: 750, delay: base + i * 70, easing: EASE_EXPO, fill: 'both' }));
+      keep(el.animate(rise, { duration: 750, delay: base + i * 70, easing: EASE_EXPO, fill: 'backwards' }));
     });
     toArray(card.querySelectorAll('.fc-cols, .fc-col-label')).forEach(function (el, i) {
-      keep(el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 500, delay: base + 180 + i * 80, easing: 'ease', fill: 'both' }));
+      keep(el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 500, delay: base + 180 + i * 80, easing: 'ease', fill: 'backwards' }));
     });
 
     toArray(card.querySelectorAll('.fc-pair')).forEach(function (row, i) {
@@ -202,29 +202,29 @@
       var start = base + 440 + i * 120;
       var at = function (x) { return start + duration * Math.max(0, Math.min(1, x / travel)); };
 
-      keep(before.animate(rise, { duration: 650, delay: base + 220 + i * 70, easing: EASE_OUT, fill: 'both' }));
+      keep(before.animate(rise, { duration: 650, delay: base + 220 + i * 70, easing: EASE_OUT, fill: 'backwards' }));
       keep(before.animate([{ color: '#F6F7F8' }, { color: '#A8ACC4' }],
-        { duration: 420, delay: at(before.offsetLeft + before.offsetWidth * 0.5), easing: 'ease', fill: 'both' }));
+        { duration: 420, delay: at(before.offsetLeft + before.offsetWidth * 0.5), easing: 'ease', fill: 'backwards' }));
       keep(scan.animate([
         { transform: 'translateX(' + (-scanWidth) + 'px)', opacity: 0 },
         { opacity: 1, offset: 0.08 },
         { opacity: 1, offset: 0.88 },
         { transform: 'translateX(' + rowWidth + 'px)', opacity: 0 }
-      ], { duration: duration, delay: start, easing: 'linear', fill: 'both' }));
+      ], { duration: duration, delay: start, easing: 'linear', fill: 'backwards' }));
       keep(arrow.animate([{ opacity: 0, transform: 'translateX(-6px)' }, { opacity: 1, transform: 'none' }],
-        { duration: 400, delay: at(arrow.offsetLeft), easing: EASE_OUT, fill: 'both' }));
+        { duration: 400, delay: at(arrow.offsetLeft), easing: EASE_OUT, fill: 'backwards' }));
       var revealStart = at(after.offsetLeft + scanWidth * 0.2);
       var revealEnd = at(after.offsetLeft + after.offsetWidth + scanWidth * 0.2);
       keep(after.animate([{ clipPath: 'inset(-10% 100% -10% 0)' }, { clipPath: 'inset(-10% 0% -10% 0)' }],
-        { duration: Math.max(200, revealEnd - revealStart), delay: revealStart, easing: 'linear', fill: 'both' }));
+        { duration: Math.max(200, revealEnd - revealStart), delay: revealStart, easing: 'linear', fill: 'backwards' }));
     });
 
     toArray(card.querySelectorAll('.fc-list--before li')).forEach(function (li, i) {
-      keep(li.animate(rise, { duration: 650, delay: base + 260 + i * 80, easing: EASE_OUT, fill: 'both' }));
+      keep(li.animate(rise, { duration: 650, delay: base + 260 + i * 80, easing: EASE_OUT, fill: 'backwards' }));
     });
     toArray(card.querySelectorAll('.fc-list--after li')).forEach(function (li, i) {
       keep(li.animate([{ clipPath: 'inset(-10% 100% -10% 0)', opacity: 0.4 }, { clipPath: 'inset(-10% 0% -10% 0)', opacity: 1 }],
-        { duration: 750, delay: base + 560 + i * 150, easing: EASE_PORTAL, fill: 'both' }));
+        { duration: 750, delay: base + 560 + i * 150, easing: EASE_PORTAL, fill: 'backwards' }));
     });
     return list;
   }
