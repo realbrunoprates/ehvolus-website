@@ -203,7 +203,7 @@
       var at = function (x) { return start + duration * Math.max(0, Math.min(1, x / travel)); };
 
       keep(before.animate(rise, { duration: 650, delay: base + 220 + i * 70, easing: EASE_OUT, fill: 'both' }));
-      keep(before.animate([{ color: '#10132A' }, { color: '#4A4E68' }],
+      keep(before.animate([{ color: '#F6F7F8' }, { color: '#A8ACC4' }],
         { duration: 420, delay: at(before.offsetLeft + before.offsetWidth * 0.5), easing: 'ease', fill: 'both' }));
       keep(scan.animate([
         { transform: 'translateX(' + (-scanWidth) + 'px)', opacity: 0 },
@@ -247,6 +247,7 @@
   if (story) {
     var cards = toArray(story.querySelectorAll('[data-step]'));
     var keys = cards.map(function (card) { return card.getAttribute('data-step'); });
+    var STAGES = keys.length + 1; /* 0 = só o triângulo */
     var nodes = toArray(story.querySelectorAll('[data-tri-node]'));
     var edges = toArray(story.querySelectorAll('[data-tri-edge]'));
     var labels = toArray(story.querySelectorAll('[data-tri-label]'));
@@ -254,11 +255,13 @@
     var countEl = story.querySelector('[data-story-count]');
     var barEl = story.querySelector('[data-story-bar]');
     var panel = story.querySelector('[data-flow-panel]');
+    var visual = story.querySelector('.story-visual');
     var triWrap = story.querySelector('[data-tri]');
     var names = { ehvolus: 'EHVOLUS', empresa: 'Empresa', profissional: 'Profissional', cliente: 'Cliente' };
     storyState.keys = keys;
 
-    var shown = 0;
+    var stage = -1;
+    var shown = -1;
     var portalRun = null;
     var cardAnims = [];
     var stackObserver = null;
@@ -272,85 +275,119 @@
       cardAnims = [];
     };
 
-    var trackCamera = function (key) {
-      if (!triWrap) return;
-      var node = nodeFor(key);
-      if (key === 'ehvolus' || !node) {
-        triWrap.classList.remove('is-tracking');
-      } else {
-        triWrap.style.setProperty('--fx', node.style.getPropertyValue('--tx'));
-        triWrap.style.setProperty('--fy', node.style.getPropertyValue('--ty'));
-        triWrap.classList.add('is-tracking');
-      }
-      if (node && motionOk) {
-        node.classList.remove('is-pulse');
-        void node.offsetWidth;
-        node.classList.add('is-pulse');
-      }
-    };
-
     var showInstant = function (index) {
       cards.forEach(function (card, i) {
         card.classList.toggle('is-shown', i === index);
-        card.classList.remove('is-entering', 'is-prep');
+        card.classList.remove('is-entering', 'is-leaving', 'is-prep');
         card.style.clipPath = '';
       });
       shown = index;
     };
 
-    /* modo fixo: o novo card se abre por cima do anterior a partir do nó */
-    var revealPinned = function (index) {
-      if (portalRun) {
-        portalRun.animation.cancel();
-        showInstant(portalRun.index);
-        portalRun = null;
+    var settle = function () {
+      if (!portalRun) return;
+      portalRun.animation.cancel();
+      if (portalRun.out) portalRun.out.cancel();
+      showInstant(portalRun.target);
+      portalRun = null;
+    };
+
+    /* o triângulo desliza só o necessário para o círculo ativo ficar fora da película */
+    var pan = function (key) {
+      if (!visual) return;
+      if (!key || !panel) {
+        visual.style.setProperty('--pan', '0px');
+        return;
       }
+      var node = nodeFor(key);
+      var width = visual.offsetWidth;
+      var restLeft = visual.offsetLeft - width / 2;
+      var tx = parseFloat(node.style.getPropertyValue('--tx')) / 100;
+      var size = parseFloat(node.style.getPropertyValue('--size')) / 100;
+      var nodeRight = restLeft + tx * width + size * width * 0.62;
+      var dx = Math.min(0, panel.offsetLeft - 28 - nodeRight);
+      dx = Math.max(dx, -restLeft + 8);
+      visual.style.setProperty('--pan', Math.round(dx) + 'px');
+    };
+
+    var pulse = function (key) {
+      var node = nodeFor(key);
+      if (!node || !motionOk) return;
+      node.classList.remove('is-pulse');
+      void node.offsetWidth;
+      node.classList.add('is-pulse');
+    };
+
+    /* abre, troca ou recolhe a película */
+    var transitionCard = function (index) {
+      settle();
       if (index === shown) return;
       cancelCardAnims();
+      var outgoing = shown >= 0 ? cards[shown] : null;
+
+      if (index < 0) {
+        if (!outgoing) return;
+        var back = portalGeometry(outgoing, nodeFor(keys[shown]));
+        var collapse = outgoing.animate([{ clipPath: back.to }, { clipPath: back.from }],
+          { duration: 520, easing: 'cubic-bezier(0.7, 0, 0.84, 0)', fill: 'forwards' });
+        portalRun = { animation: collapse, out: null, target: -1 };
+        collapse.onfinish = function () {
+          if (portalRun && portalRun.animation === collapse) settle();
+        };
+        return;
+      }
+
       var card = cards[index];
-      var node = nodeFor(keys[index]);
       card.classList.add('is-entering');
-      var geo = portalGeometry(card, node);
+      var geo = portalGeometry(card, nodeFor(keys[index]));
       var animation = card.animate([{ clipPath: geo.from }, { clipPath: geo.to }],
-        { duration: 1000, easing: EASE_PORTAL, fill: 'both' });
-      portalRun = { animation: animation, index: index };
-      cardAnims = playCard(card, 380);
+        { duration: 1050, easing: EASE_PORTAL, fill: 'both' });
+      var out = null;
+      if (outgoing) {
+        outgoing.classList.add('is-leaving');
+        out = outgoing.animate([{ opacity: 1, filter: 'blur(0px)' }, { opacity: 0, filter: 'blur(4px)' }],
+          { duration: 420, easing: 'ease', fill: 'forwards' });
+      }
+      portalRun = { animation: animation, out: out, target: index };
+      cardAnims = playCard(card, 420);
       animation.onfinish = function () {
-        if (!portalRun || portalRun.animation !== animation) return;
-        animation.cancel();
-        showInstant(index);
-        portalRun = null;
+        if (portalRun && portalRun.animation === animation) settle();
       };
     };
 
-    var setStep = function (index) {
-      if (index === storyState.index) return;
-      storyState.index = index;
-      var key = keys[index];
+    var setStage = function (next) {
+      if (next === stage) return;
+      stage = next;
+      var index = next - 1;
+      var key = index >= 0 ? keys[index] : null;
+      story.classList.toggle('is-intro', next === 0);
 
       cards.forEach(function (card, i) { card.classList.toggle('is-active', i === index); });
       nodes.forEach(function (node) {
         node.classList.toggle('is-active', node.getAttribute('data-tri-node') === key);
       });
       edges.forEach(function (edge) {
-        edge.classList.toggle('is-drawn', keys.indexOf(edge.getAttribute('data-tri-edge')) <= index);
+        var k = keys.indexOf(edge.getAttribute('data-tri-edge'));
+        edge.classList.toggle('is-drawn', index >= 0 && k <= index);
       });
       labels.forEach(function (label) {
-        label.classList.toggle('is-drawn', keys.indexOf(label.getAttribute('data-tri-label')) <= index);
+        var k = keys.indexOf(label.getAttribute('data-tri-label'));
+        label.classList.toggle('is-drawn', index >= 0 && k <= index);
       });
-      if (countEl) countEl.textContent = names[key] || '';
-      if (barEl) barEl.style.transform = 'scaleX(' + ((index + 1) / keys.length) + ')';
+      if (countEl) countEl.textContent = key ? names[key] : '';
+      if (barEl) barEl.style.transform = 'scaleX(' + (Math.max(0, index + 1) / keys.length) + ')';
 
       if (storyState.pinned) {
-        trackCamera(key);
-        if (motionOk) revealPinned(index);
+        pan(key);
+        pulse(key);
+        if (motionOk) transitionCard(index);
         else showInstant(index);
       }
     };
 
     storyState.positionFor = function (index) {
       var st = storyState.trigger;
-      return st.start + ((index + 0.4) / keys.length) * (st.end - st.start);
+      return st.start + ((index + 1.45) / STAGES) * (st.end - st.start);
     };
 
     /* celular, tablet ou sem GSAP: cada card se abre a partir do próprio marcador */
@@ -371,7 +408,7 @@
             var geo = portalGeometry(card, badge, 5);
             var animation = card.animate([{ clipPath: geo.from }, { clipPath: geo.to }],
               { duration: 1100, easing: EASE_PORTAL, fill: 'both' });
-            animation.onfinish = function () { animation.cancel(); card.style.clipPath = ''; };
+            animation.onfinish = function () { animation.cancel(); };
           }
           card.style.clipPath = '';
           playCard(card, 300);
@@ -389,7 +426,7 @@
       });
     };
 
-    setStep(0);
+    setStage(0);
 
     var pinQuery = '(min-width: 1024px) and (min-height: 620px) and (prefers-reduced-motion: no-preference)';
     if (!(hasGsap && window.matchMedia(pinQuery).matches)) setupStacked();
@@ -401,55 +438,44 @@
         teardownStacked();
         story.classList.add('is-pinned');
         storyState.pinned = true;
-        storyState.index = -1;
-        showInstant(0);
-        setStep(0);
-
-        if (motionOk && panel) {
-          cards[0].classList.add('is-prep');
-          ScrollTrigger.create({
-            trigger: panel,
-            start: 'top 78%',
-            once: true,
-            onEnter: function () {
-              if (storyState.index === 0 && !portalRun) cardAnims = playCard(cards[0], 0);
-              else cards[0].classList.remove('is-prep');
-            }
-          });
-        }
+        showInstant(-1);
+        stage = -1;
+        setStage(0);
 
         storyState.trigger = ScrollTrigger.create({
           trigger: story,
           pin: story.querySelector('[data-story-pin]'),
           start: 'top top',
-          end: function () { return '+=' + Math.round(window.innerHeight * 3); },
+          end: function () { return '+=' + Math.round(window.innerHeight * 3.8); },
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          onRefresh: function () {
+            if (stage > 0) pan(keys[stage - 1]);
+          },
           onUpdate: function (self) {
             var p = self.progress;
-            setStep(Math.min(keys.length - 1, Math.floor(p * keys.length)));
-            if (outer) outer.style.strokeDashoffset = String(Math.max(0, 1 - p * 1.2));
+            setStage(Math.min(STAGES - 1, Math.floor(p * STAGES)));
+            if (outer) outer.style.strokeDashoffset = String(Math.max(0, 1 - p * 1.15));
           }
         });
         if (outer) outer.style.strokeDashoffset = '1';
 
         return function () {
-          if (portalRun) portalRun.animation.cancel();
-          portalRun = null;
+          settle();
           cancelCardAnims();
-          story.classList.remove('is-pinned');
+          story.classList.remove('is-pinned', 'is-intro');
           storyState.pinned = false;
           storyState.trigger = null;
           if (outer) outer.style.strokeDashoffset = '';
-          if (triWrap) triWrap.classList.remove('is-tracking');
-          showInstant(0);
-          storyState.index = -1;
-          setStep(0);
+          if (visual) visual.style.removeProperty('--pan');
+          showInstant(-1);
+          stage = -1;
+          setStage(0);
         };
       });
     }
 
-    /* clique num círculo leva ao lado correspondente */
+    /* clique num círculo abre o lado dele */
     nodes.forEach(function (node) {
       node.addEventListener('click', function () {
         var index = keys.indexOf(node.getAttribute('data-tri-node'));
@@ -648,6 +674,21 @@
         scrub: true,
         onRefresh: function (self) { measure(); paint(self.progress); },
         onUpdate: function (self) { paint(self.progress); }
+      });
+    }
+
+    /* três caminhos: o painel de trás recua e escurece quando o próximo desliza por cima */
+    var journeyCards = toArray(document.querySelectorAll('[data-journey-card]'));
+    if (journeyCards.length > 1) {
+      gsap.matchMedia().add('(min-width: 761px)', function () {
+        journeyCards.forEach(function (card, i) {
+          var next = journeyCards[i + 1];
+          if (!next) return;
+          var dim = card.querySelector('[data-journey-dim]');
+          var trigger = { trigger: next.parentNode, start: 'top bottom', end: 'top 20%', scrub: true };
+          gsap.fromTo(card, { scale: 1 }, { scale: 0.92, ease: 'none', scrollTrigger: trigger });
+          if (dim) gsap.fromTo(dim, { opacity: 0 }, { opacity: 0.6, ease: 'none', scrollTrigger: trigger });
+        });
       });
     }
 

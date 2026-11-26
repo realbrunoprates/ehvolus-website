@@ -26,7 +26,7 @@
 <link rel="preload" href="assets/world-ft.webp" as="image" fetchpriority="high">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="assets/site.css?v=2.2">
+<link rel="stylesheet" href="assets/site.css?v=2.4">
 </head>
 <body>
 
@@ -214,6 +214,8 @@
             </div>
           </div>
 
+          <p class="tri-hint">Toque nos círculos para explorar cada lado.</p>
+
           <div class="story-progress" aria-hidden="true">
             <span class="story-count" data-story-count>EHVOLUS</span>
             <span class="story-bar"><span data-story-bar></span></span>
@@ -362,49 +364,101 @@
     </div>
   </section>
 
-  <!-- 05 · TRÊS CAMINHOS -->
+  <!-- 05 · TRÊS CAMINHOS (painéis que se empilham) -->
   <section class="section journeys" id="jornadas" aria-labelledby="jornadas-heading">
     <div class="wrap">
       <div class="journeys-head">
         <p class="eyebrow" data-reveal>Três caminhos, um fluxo</p>
         <h2 class="display-2" id="jornadas-heading" data-split-reveal>Cada lado entra pela porta que faz sentido para ele.</h2>
       </div>
-      <div class="journey-grid" data-stagger>
-        <article class="journey" id="empresas" aria-labelledby="empresas-heading" data-reveal>
-          <figure class="journey-figure">
-            <img src="assets/journey-empresa.webp" width="1440" height="960" loading="lazy" alt="Equipe de operações coordenando serviços técnicos em uma central conectada" style="object-position:64% 50%;">
-            <figcaption>Operação coordenada</figcaption>
-          </figure>
-          <span class="journey-index">01 · Empresa</span>
-          <h3 class="journey-title" id="empresas-heading">Mais capacidade de execução. Mais visibilidade sobre o campo.</h3>
-          <p class="journey-copy">Encontre profissionais adequados à demanda, organize o fluxo de trabalho em um só lugar e acompanhe a execução do início ao fim, sem depender de contato informal.</p>
-          <a class="link-arrow link-arrow--light" href="https://app.ehvolus.com.br/onboarding" target="_blank" rel="noopener">Quero levar demandas à EHVOLUS<span aria-hidden="true"></span></a>
+      <div class="journey-stack" data-journey-stack>
+        <article class="journey" id="empresas" aria-labelledby="empresas-heading">
+          <div class="journey-card" data-journey-card>
+            <img class="journey-bg" src="assets/journey-empresa.webp" width="1440" height="960" loading="lazy" alt="Equipe de operações coordenando serviços técnicos em uma central conectada" style="object-position:62% 45%;">
+            <div class="journey-shade" aria-hidden="true"></div>
+            <span class="journey-cap">Operação coordenada</span>
+            <div class="journey-body">
+              <span class="journey-index">01 · Empresa</span>
+              <h3 class="journey-title" id="empresas-heading">Mais capacidade de execução. Mais visibilidade sobre o campo.</h3>
+              <p class="journey-copy">Encontre profissionais adequados à demanda, organize o fluxo de trabalho em um só lugar e acompanhe a execução do início ao fim, sem depender de contato informal.</p>
+              <a class="link-arrow" href="https://app.ehvolus.com.br/onboarding" target="_blank" rel="noopener">Quero levar demandas à EHVOLUS<span aria-hidden="true"></span></a>
+            </div>
+            <div class="journey-dim" aria-hidden="true" data-journey-dim></div>
+          </div>
         </article>
-        <article class="journey" id="profissionais" aria-labelledby="profissionais-heading" data-reveal>
-          <figure class="journey-figure">
-            <img src="assets/journey-profissional-servicos.webp" width="1116" height="960" loading="lazy" alt="Eletricista testa um quadro elétrico com multímetro enquanto outros profissionais cuidam da climatização e da hidráulica de um edifício" style="object-position:30% 50%;">
-            <figcaption>Experiência em campo</figcaption>
-          </figure>
-          <span class="journey-index">02 · Profissional</span>
-          <h3 class="journey-title" id="profissionais-heading">Seu trabalho encontra novas oportunidades. Sua experiência constrói valor.</h3>
-          <p class="journey-copy">Acesse demandas compatíveis com o que você faz, desenvolva reputação ao longo do tempo e trabalhe com a autonomia e a estrutura que faltavam.</p>
-          <a class="link-arrow link-arrow--light" href="https://app.ehvolus.com.br/onboarding" target="_blank" rel="noopener">Quero prestar serviços<span aria-hidden="true"></span></a>
+        <article class="journey" id="profissionais" aria-labelledby="profissionais-heading">
+          <div class="journey-card" data-journey-card>
+            <img class="journey-bg" src="assets/journey-profissional-servicos.webp" width="1116" height="960" loading="lazy" alt="Eletricista testa um quadro elétrico com multímetro enquanto outros profissionais cuidam da climatização e da hidráulica de um edifício" style="object-position:60% 35%;">
+            <div class="journey-shade" aria-hidden="true"></div>
+            <span class="journey-cap">Experiência em campo</span>
+            <div class="journey-body">
+              <span class="journey-index">02 · Profissional</span>
+              <h3 class="journey-title" id="profissionais-heading">Seu trabalho encontra novas oportunidades. Sua experiência constrói valor.</h3>
+              <p class="journey-copy">Acesse demandas compatíveis com o que você faz, desenvolva reputação ao longo do tempo e trabalhe com a autonomia e a estrutura que faltavam.</p>
+              <a class="link-arrow" href="https://app.ehvolus.com.br/onboarding" target="_blank" rel="noopener">Quero prestar serviços<span aria-hidden="true"></span></a>
+            </div>
+            <div class="journey-dim" aria-hidden="true" data-journey-dim></div>
+          </div>
         </article>
-        <article class="journey" id="clientes" aria-labelledby="clientes-heading" data-reveal>
-          <figure class="journey-figure">
-            <img src="assets/journey-cliente.webp" width="1440" height="960" loading="lazy" alt="Cliente acompanhando em tempo real a conclusão de um serviço técnico em um edifício" style="object-position:34% 50%;">
-            <figcaption>Acompanhamento visível</figcaption>
-          </figure>
-          <span class="journey-index">03 · Cliente</span>
-          <h3 class="journey-title" id="clientes-heading">Da necessidade ao serviço resolvido, sem ficar no escuro.</h3>
-          <p class="journey-copy">Encontre a solução adequada para a sua necessidade e acompanhe quem atende, quando atende e como a execução avança até o fim.</p>
-          <a class="link-arrow link-arrow--light" href="https://app.ehvolus.com.br/onboarding" target="_blank" rel="noopener">Preciso de um serviço<span aria-hidden="true"></span></a>
+        <article class="journey" id="clientes" aria-labelledby="clientes-heading">
+          <div class="journey-card" data-journey-card>
+            <img class="journey-bg" src="assets/journey-cliente.webp" width="1440" height="960" loading="lazy" alt="Cliente acompanhando em tempo real a conclusão de um serviço técnico em um edifício" style="object-position:58% 40%;">
+            <div class="journey-shade" aria-hidden="true"></div>
+            <span class="journey-cap">Acompanhamento visível</span>
+            <div class="journey-body">
+              <span class="journey-index">03 · Cliente</span>
+              <h3 class="journey-title" id="clientes-heading">Da necessidade ao serviço resolvido, sem ficar no escuro.</h3>
+              <p class="journey-copy">Encontre a solução adequada para a sua necessidade e acompanhe quem atende, quando atende e como a execução avança até o fim.</p>
+              <a class="link-arrow" href="https://app.ehvolus.com.br/onboarding" target="_blank" rel="noopener">Preciso de um serviço<span aria-hidden="true"></span></a>
+            </div>
+            <div class="journey-dim" aria-hidden="true" data-journey-dim></div>
+          </div>
         </article>
       </div>
     </div>
   </section>
 
-  <!-- 06 · MERCADOS -->
+  <!-- 06 · PROPÓSITO -->
+  <section class="section purpose" id="proposito" aria-labelledby="proposito-heading">
+    <div class="wrap">
+      <div class="purpose-head">
+        <p class="eyebrow" data-reveal>Propósito</p>
+        <h2 class="display-2" id="proposito-heading" data-split-reveal>Missão, Visão e Valores</h2>
+      </div>
+
+      <div class="purpose-row" id="missao">
+        <h3 class="purpose-label" data-reveal>Missão</h3>
+        <p class="purpose-text" data-reveal>A EHVOLUS existe para conectar inovação e profissionais, entregando soluções que impulsionam a evolução tecnológica de empresas no mercado de serviços.</p>
+      </div>
+
+      <div class="purpose-row" id="visao">
+        <h3 class="purpose-label" data-reveal>Visão</h3>
+        <p class="purpose-text" data-reveal>Liderar a transição para uma nova cultura de serviços profissionais, onde a gestão em tempo real e a flexibilidade estrutural sejam os pilares de empresas conectadas às tendências globais.</p>
+      </div>
+
+      <div class="purpose-row purpose-row--values" data-stagger>
+        <h3 class="purpose-label" data-reveal>Valores</h3>
+        <div class="values-group" data-reveal>
+          <p class="values-dim">Humano</p>
+          <ol class="values-list">
+            <li><span>01</span>Liberdade</li>
+            <li><span>02</span>Eficiência operacional</li>
+            <li><span>03</span>Preservar o essencial</li>
+          </ol>
+        </div>
+        <div class="values-group" data-reveal>
+          <p class="values-dim">Tecnológico</p>
+          <ol class="values-list" start="4">
+            <li><span>04</span>Tecnologia integrada ao profissional</li>
+            <li><span>05</span>Transparência e dados em tempo real</li>
+            <li><span>06</span>Evolução contínua e agilidade</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 · MERCADOS -->
   <section class="section markets" id="mercados" aria-labelledby="mercados-heading">
     <div class="wrap">
       <div class="markets-head">
@@ -442,46 +496,6 @@
           <p class="market-copy">Profissionais para atendimentos sob demanda a ser consultada.</p>
         </li>
       </ol>
-    </div>
-  </section>
-
-  <!-- 07 · PROPÓSITO -->
-  <section class="section purpose" id="proposito" aria-labelledby="proposito-heading">
-    <div class="wrap">
-      <div class="purpose-head">
-        <p class="eyebrow" data-reveal>Propósito</p>
-        <h2 class="display-2" id="proposito-heading" data-split-reveal>Missão, Visão e Valores</h2>
-      </div>
-
-      <div class="purpose-row" id="missao">
-        <h3 class="purpose-label" data-reveal>Missão</h3>
-        <p class="purpose-text" data-reveal>A EHVOLUS existe para conectar inovação e profissionais, entregando soluções que impulsionam a evolução tecnológica de empresas no mercado de serviços.</p>
-      </div>
-
-      <div class="purpose-row" id="visao">
-        <h3 class="purpose-label" data-reveal>Visão</h3>
-        <p class="purpose-text" data-reveal>Liderar a transição para uma nova cultura de serviços profissionais, onde a gestão em tempo real e a flexibilidade estrutural sejam os pilares de empresas conectadas às tendências globais.</p>
-      </div>
-
-      <div class="purpose-row purpose-row--values" data-stagger>
-        <h3 class="purpose-label" data-reveal>Valores</h3>
-        <div class="values-group" data-reveal>
-          <p class="values-dim">Humano</p>
-          <ol class="values-list">
-            <li><span>01</span>Liberdade</li>
-            <li><span>02</span>Eficiência operacional</li>
-            <li><span>03</span>Preservar o essencial</li>
-          </ol>
-        </div>
-        <div class="values-group" data-reveal>
-          <p class="values-dim">Tecnológico</p>
-          <ol class="values-list" start="4">
-            <li><span>04</span>Tecnologia integrada ao profissional</li>
-            <li><span>05</span>Transparência e dados em tempo real</li>
-            <li><span>06</span>Evolução contínua e agilidade</li>
-          </ol>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -658,7 +672,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" integrity="sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" integrity="sha384-Z3REaz79l2IaAZqJsSABtTbhjgOUYyV3p90XNnAPCSHg3EMTz1fouunq9WZRtj3d" crossorigin="anonymous"></script>
-<script src="assets/site.js?v=2.2"></script>
-<script src="assets/contact.js?v=2.2"></script>
+<script src="assets/site.js?v=2.4"></script>
+<script src="assets/contact.js?v=2.4"></script>
 </body>
 </html>
