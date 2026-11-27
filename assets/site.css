@@ -4,20 +4,24 @@
    Movimento só onde conta a história (hero, fluxo, passos, imagens).
    ========================================================================== */
 
+/* Archivo (Omnibus-Type, SIL OFL 1.1; licença em fonts/OFL-Archivo.txt).
+   Variável em peso e largura: títulos levemente expandidos conversam com o wordmark. */
 @font-face {
-  font-family: 'Inter';
+  font-family: 'Archivo';
   font-style: normal;
   font-weight: 100 900;
+  font-stretch: 62% 125%;
   font-display: swap;
-  src: url('fonts/inter-latin.woff2') format('woff2');
+  src: url('fonts/archivo-latin.woff2') format('woff2');
 }
 
 @font-face {
-  font-family: 'Inter';
+  font-family: 'Archivo';
   font-style: italic;
   font-weight: 100 900;
+  font-stretch: 62% 125%;
   font-display: swap;
-  src: url('fonts/inter-latin-italic.woff2') format('woff2');
+  src: url('fonts/archivo-latin-italic.woff2') format('woff2');
 }
 
 :root {
@@ -46,7 +50,9 @@
   --ink-placeholder: #686C82;
 
   /* tipografia */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-sans: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --stretch-display: 112%;
+  --stretch-label: 125%;
   --fs-display-1: clamp(40px, 6vw, 92px);
   --fs-display-2: clamp(34px, 5vw, 80px);
   --fs-display-3: clamp(28px, 3.4vw, 54px);
@@ -55,8 +61,8 @@
   --fs-body: 16px;
   --fs-small: 14px;
   --fs-micro: 12px;
-  --tracking-display: -0.045em;
-  --tracking-tight: -0.025em;
+  --tracking-display: -0.03em;
+  --tracking-tight: -0.015em;
   --tracking-label: 0.2em;
 
   /* grade e espaço */
@@ -108,12 +114,14 @@ body {
   font-size: var(--fs-body);
   line-height: 1.6;
   font-weight: 400;
+  /* a Archivo nasceu para títulos: no texto corrido, um pouco mais de ar entre letras e palavras */
+  letter-spacing: 0.008em;
+  word-spacing: 0.08em;
   color: var(--ink-on-light);
   background: var(--color-navy-900);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  font-feature-settings: 'cv11', 'ss01';
 }
 
 body.nav-open {
@@ -143,7 +151,28 @@ h1, h2, h3, p, figure {
 
 h1, h2, h3 {
   font-weight: 500;
+  font-stretch: var(--stretch-display);
+  word-spacing: normal;
   text-wrap: balance;
+}
+
+/* rótulos em caixa alta na largura máxima, como o wordmark */
+.fc-tag,
+.fc-cols,
+.fc-col-label,
+.fc-label,
+.journey-cap,
+.journey-index,
+.purpose-label,
+.values-dim,
+.footer-col-title,
+.tri-hint,
+.tri-labels text,
+.nav-toggle-label,
+.nav-panel-close,
+.fc-close,
+.story-count {
+  font-stretch: var(--stretch-label);
 }
 
 p {
@@ -765,7 +794,7 @@ a {
 }
 
 .hero-title {
-  max-width: 16ch;
+  max-width: 17ch;
   font-size: var(--fs-display-1);
   line-height: 1;
   letter-spacing: var(--tracking-display);
@@ -1289,7 +1318,7 @@ html.is-ready .hero .doors[data-intro] { --d: 940ms; }
   margin-top: 14px;
   font-size: clamp(28px, 2.8vw, 42px);
   line-height: 1.05;
-  letter-spacing: -0.035em;
+  letter-spacing: var(--tracking-display);
 }
 
 .fc-hub-title {
@@ -1297,7 +1326,7 @@ html.is-ready .hero .doors[data-intro] { --d: 940ms; }
   margin-top: 14px;
   font-size: clamp(26px, 2.5vw, 38px);
   line-height: 1.08;
-  letter-spacing: -0.035em;
+  letter-spacing: var(--tracking-display);
 }
 
 .fc-cols,
@@ -1792,7 +1821,7 @@ html.is-ready .hero .doors[data-intro] { --d: 940ms; }
   font-size: clamp(72px, 9vw, 148px);
   font-weight: 300;
   line-height: 0.85;
-  letter-spacing: -0.06em;
+  letter-spacing: -0.04em;
   font-variant-numeric: tabular-nums;
   color: var(--color-gold-on-light);
 }
@@ -1974,7 +2003,7 @@ html.has-js .how[data-animated] .how-step:not(.is-lit) p {
 .market-name {
   font-size: var(--mname);
   line-height: 1;
-  letter-spacing: -0.04em;
+  letter-spacing: var(--tracking-display);
   transition: transform 500ms var(--ease-out), color 300ms ease;
 }
 
@@ -2950,7 +2979,7 @@ html.contact-open {
   margin: 16px 0;
   font-size: clamp(30px, 3.6vw, 56px);
   line-height: 1.04;
-  letter-spacing: -0.035em;
+  letter-spacing: var(--tracking-display);
 }
 
 .journey-copy {
